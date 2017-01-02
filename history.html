@@ -31,12 +31,11 @@ body {
 
 </style>
 <body>
-<h1>Popular vote with seats won</h1>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 var selectedParty = decodeURIComponent(location.search.substr(1));
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
+var margin = {top: 40, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -46,6 +45,7 @@ var x = d3.time.scale()
     .range([0, width]);
 
 var formatPercent = d3.format(".0%");
+var formatPercentDetailed = d3.format(".1%");
 
 var y = d3.scale.linear()
     .range([height, 0]);
@@ -61,12 +61,12 @@ var yAxis = d3.svg.axis()
 
 
 var line = d3.svg.area()
-    .interpolate("linear")
+    .interpolate("step-after")
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d["Vote %"]); });
 
 var area = d3.svg.area()
-    .interpolate("linear")
+    .interpolate("step-after")
     .x(function(d) { return x(d.date); })
     .y1(function(d) { return y(d["Vote %"]); });
 
@@ -80,34 +80,25 @@ d3.tsv("history.tsv", function(error, rawData) {
   if (error) throw error;
 
   var data = []
-  var previousD;
+  var latestD;
   rawData.forEach(function(d) {
     d.date = parseDate(d.date);
   });
   rawData.filter(function(d) {
-      return d.Party === selectedParty && d.date.getFullYear() > 1930
+      return d.Party === selectedParty && d.date.getFullYear() > 1950
   }).forEach(function(d) {
-    if (previousD) {
-        data.push({
-          "date": (new Date(d.date.valueOf() - 1)),
-          "Vote %": previousD["Vote %"],
-          "Seat %": previousD["Seat %"],
-        });
-    }
     data.push({
       "date": d.date,
       "Vote %": d["Vote %"],
       "Seat %": d["Seat %"],
     });
-    previousD = d;
+    latestD = d;
   });
-    if (previousD) {
-        data.push({
-          "date": (new Date(previousD.date.valueOf() + 86400 * 1000 * 365 * 3)),
-          "Vote %": previousD["Vote %"],
-          "Seat %": previousD["Seat %"],
-        });
-    }
+    data.push({
+      "date": (new Date(latestD.date.valueOf() + 86400 * 1000 * 365 * 3)),
+      "Vote %": latestD["Vote %"],
+      "Seat %": latestD["Seat %"],
+    });
 
   x.domain(d3.extent(data, function(d) { return d.date; }));
 
@@ -166,8 +157,7 @@ d3.tsv("history.tsv", function(error, rawData) {
             });
     svg.selectAll("line.verticalGrid").data(x.ticks(20)).enter()
         .append("line")
-            .attr(
-            {
+            .attr({
                 "class":"verticalGrid",
                 "y1" : 0,
                 "y2" : height,
@@ -178,6 +168,40 @@ d3.tsv("history.tsv", function(error, rawData) {
                 "stroke" : "rgba(0,0,0,0.05)",
                 "stroke-width" : "1px"
             });
+
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", -10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "30px")
+        .text(selectedParty + " Popular Vote");
+
+    svg.append("text")
+        .attr("x", width)
+        .attr("y", y(latestD["Vote %"]) - 120)
+        .attr("text-anchor", "end")
+        .style("font-size", "14px")
+        .text(latestD.date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote and " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
+
+
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", "triangle")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("markerWidth", 30)
+        .attr("markerHeight", 30)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M 0 0 12 6 0 12 3 6")
+        .style("fill", "black");
+    svg.append("line")
+        .attr("x1", width - 20)
+        .attr("x2", width - 20)
+        .attr("y1", y(latestD["Vote %"]) - 115)
+        .attr("y2", y(latestD["Vote %"]) - 80)
+        .attr("stroke-width", 1.5)
+        .attr("stroke", "black")
+        .attr("marker-end", "url(#triangle)");
 });
 
 </script>
