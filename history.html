@@ -103,7 +103,7 @@ d3.tsv("history.tsv", function(error, rawData) {
   x.domain(d3.extent(data, function(d) { return d.date; }));
 
   y.domain([
-    0, 1
+    0, 0.8
   ]);
 
   svg.datum(data);
@@ -178,7 +178,7 @@ d3.tsv("history.tsv", function(error, rawData) {
 
     svg.append("text")
         .attr("x", width)
-        .attr("y", y(latestD["Vote %"]) - 120)
+        .attr("y", y(latestD["Vote %"]) - 140)
         .attr("text-anchor", "end")
         .style("font-size", "14px")
         .text(latestD.date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote and " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
@@ -197,8 +197,8 @@ d3.tsv("history.tsv", function(error, rawData) {
     svg.append("line")
         .attr("x1", width - 20)
         .attr("x2", width - 20)
-        .attr("y1", y(latestD["Vote %"]) - 115)
-        .attr("y2", y(latestD["Vote %"]) - 80)
+        .attr("y1", y(latestD["Vote %"]) - 135)
+        .attr("y2", y(latestD["Vote %"]) - 100)
         .attr("stroke-width", 1.5)
         .attr("stroke", "black")
         .attr("marker-end", "url(#triangle)");
