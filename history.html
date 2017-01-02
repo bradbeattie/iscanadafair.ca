@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 14px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  opacity: 0.4;
+  shape-rendering: crispEdges;
+}
+
+.area.above, .area.below { fill: hsl(0, 0%, 72%); }
+.area.Liberal { fill: lightcoral; }
+.area.Conservative { fill: cornflowerblue; }
+.area.PC { fill: #0D5D93; }
+.area.NDP { fill: sandybrown; }
+.area.BQ { fill: lightskyblue; }
+.area.Green { fill: #2F873E; }
+.area.below { opacity: 0.6; }
+
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+</style>
+<body>
+<h1>Popular vote with seats won</h1>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+var selectedParty = decodeURIComponent(location.search.substr(1));
+
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var formatPercent = d3.format(".0%");
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(formatPercent);
+
+
+var line = d3.svg.area()
+    .interpolate("linear")
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d["Vote %"]); });
+
+var area = d3.svg.area()
+    .interpolate("linear")
+    .x(function(d) { return x(d.date); })
+    .y1(function(d) { return y(d["Vote %"]); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("history.tsv", function(error, rawData) {
+  if (error) throw error;
+
+  var data = []
+  var previousD;
+  rawData.forEach(function(d) {
+    d.date = parseDate(d.date);
+  });
+  rawData.filter(function(d) {
+      return d.Party === selectedParty && d.date.getFullYear() > 1930
+  }).forEach(function(d) {
+    if (previousD) {
+        data.push({
+          "date": (new Date(d.date.valueOf() - 1)),
+          "Vote %": previousD["Vote %"],
+          "Seat %": previousD["Seat %"],
+        });
+    }
+    data.push({
+      "date": d.date,
+      "Vote %": d["Vote %"],
+      "Seat %": d["Seat %"],
+    });
+    previousD = d;
+  });
+    if (previousD) {
+        data.push({
+          "date": (new Date(previousD.date.valueOf() + 86400 * 1000 * 365 * 3)),
+          "Vote %": previousD["Vote %"],
+          "Seat %": previousD["Seat %"],
+        });
+    }
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  y.domain([
+    0, 1
+  ]);
+
+  svg.datum(data);
+
+  svg.append("clipPath")
+      .attr("id", "clip-below")
+    .append("path")
+      .attr("d", area.y0(height));
+
+  svg.append("clipPath")
+      .attr("id", "clip-above")
+    .append("path")
+      .attr("d", area.y0(0));
+
+  svg.append("path")
+      .attr("class", "area above " + selectedParty)
+      .attr("clip-path", "url(#clip-above)")
+      .attr("d", area.y0(function(d) { return y(d["Seat %"]); }));
+
+  svg.append("path")
+      .attr("class", "area below " + selectedParty)
+      .attr("clip-path", "url(#clip-below)")
+      .attr("d", area);
+
+  svg.append("path")
+      .attr("class", "line")
+      .attr("d", line);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+
+    svg.selectAll("line.horizontalGrid").data(y.ticks(8)).enter()
+        .append("line")
+            .attr(
+            {
+                "class":"horizontalGrid",
+                "x1" : 0,
+                "x2" : width,
+                "y1" : function(d){ return y(d);},
+                "y2" : function(d){ return y(d);},
+                "fill" : "none",
+                "shape-rendering" : "crispEdges",
+                "stroke" : "rgba(0,0,0,0.05)",
+                "stroke-width" : "1px"
+            });
+    svg.selectAll("line.verticalGrid").data(x.ticks(20)).enter()
+        .append("line")
+            .attr(
+            {
+                "class":"verticalGrid",
+                "y1" : 0,
+                "y2" : height,
+                "x1" : function(d){ return x(d);},
+                "x2" : function(d){ return x(d);},
+                "fill" : "none",
+                "shape-rendering" : "crispEdges",
+                "stroke" : "rgba(0,0,0,0.05)",
+                "stroke-width" : "1px"
+            });
+});
+
+</script>

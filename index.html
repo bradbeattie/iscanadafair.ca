@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=700, initial-scale=1.0">
+        <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+        <link href="https://fonts.googleapis.com/css?family=Cinzel|Open+Sans" rel="stylesheet">
+        <title>Measuring Unfairness &mdash; Calculating Canada's Gallagher Index</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="app">
+            <div id="section-1" class="section">
+                <h1>&mdash; Measuring Unfairness &mdash;<br /><small>Calculating Canada's Gallagher Index</small></h1>
+                <p>In 2015, the Liberal Party had 19% of the popular vote and 11% of the seats in parliament. On October 5th, they released their party platform stating that they were <q>committed to ensuring that 2015 will be the last federal election conducted under the first-past-the-post voting system</q>.
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/CEVvDK_27lM?rel=0&amp;showinfo=0&start=483&end=512" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <h2>What is first-past-the-post?</h2>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/s7tWHJfhiyo?rel=0&amp;showinfo=0&end=361" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div id="section-2" class="section">
+                <h2>Canada's Special Committee on Electoral Reform</h2>
+                <p>On June 21st, 2016, the all-party Special Committee on Electoral Reform began its work engaging with Canadians to find our best way forward. On December 1st, they came back with <a target="_blank" href="http://www.parl.gc.ca/Content/HOC/Committee/421/ERRE/Reports/RP8655791/421_ERRE_Rpt03_PDF/421_ERRE_Rpt03-e.pdf">a 168 page report with 13 specific recommendations</a>. Recommendation #1?</p>
+                <p class="highlight">To pick a new voting system, we have to measure how fair it is.<br />We can measure fairness using the Gallagher Index.</p>
+                <p>Maryam Monsef (Minister of Democratic Institutions) criticised the recommendation of the Committee, reading the forumla out loud without explanation.</p>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/esw8gbfuMDA?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <p>While <a target="_blank" href="http://www.cbc.ca/news/politics/maryam-monsef-apology-electoral-reform-1.3878457">she later apologized</a>, the question stands. What is the Gallagher Index? What does it do?</p>
+            </div>
+            <div id="section-3" class="section">
+                <h2>In short</h2>
+                <p class="highlight">The Gallagher Index measures how unfair a voting system is.</p>
+                <p>It looks at how we voted.<br />It looks at how we're represented.<br />Then it says how different those two measurements are.</p>
+                <p>So if a party gets more seats than votes, the index is high.<br />If all parties win seats in proportion to their votes, the index is zero.</p>
+                <h2>Breaking it down</h2>
+                <p>If you're curious, the following is how we calculate the Gallagher Index for Canada's 2015 federal election.</p>
+                <img src="formula.png" style="width: 220px" />
+                <table id="breakdown">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Votes</th>
+                            <th>Seats</th>
+                            <th>Vote %</th>
+                            <th>Seat %</th>
+                            <th>Difference</th>
+                            <th>Squared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="party in selectedExample.parties">
+                            <th>{{ party.name }}</th>
+                            <td><input type="number" min="0" step="1" v-model.number="party.votes" class="form-control wider" /></td>
+                            <td><input type="number" min="0" step="1" v-model.number="party.seats" class="form-control" /></td>
+                            <td><input type="text" disabled :value="per(party.votePercentage)" class="form-control" /></td>
+                            <td><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" /></td>
+                            <td><input type="text" disabled :value="per(party.difference)" class="form-control" :style="{ 'font-weight': Math.abs(party.difference) > 3.17 ? 'bold' : 'normal' }" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
+                            <td><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6">Sum</th>
+                            <td><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Halved</th>
+                            <td><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Square rooted</th>
+                            <td><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
+                <h3>Maximum recommended by the Special Committee<br/><span class="highlight">&mdash; 5% &mdash;</span></h3>
+            </div>
+            <div id="section-4" class="section">
+                <h2>So is Canada Fair?</h2>
+                <p>At least with respect to proportionality, not yet. But page 70 of the Special Committee's report highlighted the Gallagher Index of several considered systems, six of which meet the recommended threshold.</p>
+                <table id="estimates" class="shaded" style="padding: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Voting system</th>
+                            <th>Gallagher Index</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/av/index.html">Alternative Vote</a></td>
+                            <td class="gallagher-index-10-plus">19.0%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/fptp/index.html">First-Past-The-Post</a></td>
+                            <td class="gallagher-index-10-plus">12.0%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/av-plus/index.html">AV+</a></td>
+                            <td class="gallagher-index-10-plus">13.4%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/mmp-15pct/index.html">Mixed Member Proportional (Lite)</a></td>
+                            <td class="gallagher-index-5-10">9.0%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/mmp-8-fptp/index.html">Mixed Member Proportional (Small Regions)</a></td>
+                            <td class="gallagher-index-0-5">3.8% </td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/rup-15pct/index.html">Rural-Urban PR (More Singles, 389 Seats)</a></td>
+                            <td class="gallagher-index-0-5">1.9%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/rup-stv/index.html">Rural-Urban PR (Few Singles)</a></td>
+                            <td class="gallagher-index-0-5">2.4%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/ru_multiples_rc2/index.html">Riding Centric Rural-Urban PR</a></td>
+                            <td class="gallagher-index-0-5">1.5%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/rup-338/index.html">Rural-Urban PR (More Singles, 338 Seats)</a></td>
+                            <td class="gallagher-index-0-5">2.7%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/stv_med/index.html">Single Transferable Vote (Medium-sized Regions)</a></td>
+                            <td class="gallagher-index-0-5">3.3%</td>
+                        </tr>
+                        <tr>
+                            <td><a target="_blank" href="http://election-modelling.ca/stv_small/index.html">Single Transferable Vote (Small Regions)</a></td>
+                            <td class="gallagher-index-5-10">5.6%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>The Liberal Party Platform clearly says <a target="_blank" href="https://www.liberal.ca/realchange/making-decisions/">&quot;we will use accurate data to make good decisions&quot;</a>, but accurate data requires measurement. The Gallagher Index measures how fair our elections are.</p>
+                <h2>What you can do</h2>
+                <div id="call-to-action">
+                    <h3>Get up to speed on electoral reform</h3>
+                    <p>CGP Grey's videos <a target="_blank" href="https://www.youtube.com/watch?v=l8XOZJkozfI">Politics in the Animal Kingdom: Single Transferable Vote</a><br />and <a target="_blank" href="https://www.youtube.com/watch?v=QT0I-sdoSXU">Mixed-Member Proportional Representation Explained</a></p>
+                    <p><a target="_blank" href="https://www.canada.ca/en/campaign/electoral-reform/learn-about-canadian-federal-electoral-reform/electoral-systems-factsheet.html">The Government of Canada's Electoral systems factsheet</a><!-- Backup link: https://archive.fo/CbK5u --></p>
+                    <p><a target="_blank" href="http://www.parl.gc.ca/Committees/en/ERRE">Special Committee on Electoral Reform</a></p>
+                    <h3>Stay up to date</h3>
+                    <p><a target="_blank" href="http://www.cbc.ca/news/politics/mps-debate-government-s-my-democracy-survey-1.3882723">MPs debate government's My Democracy survey</a></p>
+                    <p><a target="_blank" href="http://www.cpac.ca/en/programs/question-period/">Question Period footage via CPAC</a></p>
+                    <h3>Engage in the conversation</h3>
+                    <p>Contact your MP (<a target="_blank" href="http://www.lop.parl.gc.ca/ParlInfo/compilations/houseofcommons/memberbypostalcode.aspx?Menu=HOC">Parliament of Canada's postal code search</a>, <a target="_blank" href="https://openparliament.ca/">OpenParliament.ca</a>)</p>
+                    <p>Twitter hashtags at <a target="_blank" href="https://twitter.com/hashtag/mydemocracy">#mydemocracy</a>, <a target="_blank" href="https://twitter.com/hashtag/erre">#ERRE</a></p>
+                    <p>Connect with others via <a href="http://www.leadnow.ca/">leadnow.ca</a> and <a href="http://www.fairvote.ca/">Fair Vote Canada</a></p>
+                    <p style="opacity: 0.2">Email me at <a href="mailto:bradbeattie@gmail.com">bradbeattie@gmail.com</a> if you have feedback on this site's content</p>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.min.js"></script>
+        <script src="gallagher.js"></script>
+    </body>
+</html>
