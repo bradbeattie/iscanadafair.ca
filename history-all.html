@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    .line {
+        fill: none;
+        stroke: black;
+        stroke-width: 5px;
+        opacity: 0.9;
+    }
+    .liberal { stroke: lightcoral; }
+    .canadianalliance { stroke: cadetblue; }
+    .reform { stroke: mediumseagreen; }
+    .conservative { stroke: cornflowerblue; }
+    .pc { stroke: #0d5d93; }
+    .ndp { stroke: sandybrown; }
+    .bq { stroke: lightskyblue; }
+    .green { stroke: #2f873e; }
+</style>
+<body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+<script>
+var margin = {top: 20, right: 20, bottom: 30, left: 50};
+var width = 960 - margin.left - margin.right;
+var height = 500 - margin.top - margin.bottom;
+var parseTime = d3.timeParse("%Y-%m-%d");
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+var valueline = d3.line()
+    .x(function(d) { return  x(d.dateObj); })
+    .y(function(d) { return y(d.proportionality); })
+    //.curve(d3.curveStepAfter)
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var markerRadius = 1.1
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", "lastElection")
+        .attr("refX", markerRadius * 0.3)
+        .attr("refY", markerRadius)
+        .attr("markerWidth", markerRadius * 2)
+        .attr("markerHeight", markerRadius * 2)
+        .attr("orient", "auto")
+        .append("circle")
+        .attr("fill", "rgba(0,0,0,0.5)")
+        .attr("r", markerRadius)
+        .attr("cx", markerRadius)
+        .attr("cy", markerRadius)
+
+// Get the data
+d3.tsv("history.tsv", function(error, rawData) {
+    if (error) throw error;
+
+    // format the data
+    var parties = new Set([]);
+    var years = new Set([]);
+    rawData.forEach(function(d) {
+        years.add(d.date);
+        d.dateObj = parseTime(d.date);
+        d.proportionality = d["Seat %"] / d["Vote %"];
+        parties.add(d.Party);
+    });
+    years = Array.from(years).sort();
+    years.push("2019-01-01");
+
+    rawData = rawData.filter(function(d) {
+        return d.dateObj.getFullYear() > 1980;
+    });
+
+    // Scale the range of the data
+    x.domain([parseTime("1984-09-01"), parseTime(years[years.length - 1])]);
+    y.domain([0, d3.max(rawData, function(d) { return d.proportionality; })]);
+
+    parties.forEach(function(selectedParty) {
+        var data = [];
+        var latestD;
+        rawData.filter(function(d) {
+            return d.Party === selectedParty;
+        }).forEach(function(d) {
+            if (latestD) {
+                data.push({
+                    "proportionality": latestD.proportionality,
+                    "dateObj": (new Date(d.dateObj.valueOf() * 0.9 + latestD.dateObj.valueOf() * 0.1)),
+                })
+            }
+            data.push(d)
+            latestD = d;
+        });
+        if (data.length) {
+            var lastRecord = data[data.length - 1];
+            data.push({
+                "dateObj": parseTime(years[years.indexOf(lastRecord.date) + 1]),
+                "proportionality": lastRecord.proportionality,
+            })
+            svg.append("path")
+                .data([data])
+                .attr("class", "line " + selectedParty.replace(" ", "").toLowerCase())
+                .attr("d", valueline)
+                .attr("marker-end", lastRecord.dateObj.getFullYear() !== 2015 ? "url(#lastElection)": "")
+        }
+    });
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+    svg.selectAll("line.horizontalGrid").data(y.ticks(8)).enter()
+        .append("line")
+            .attrs({
+                "class":"horizontalGrid",
+                "x1" : 0,
+                "x2" : width,
+                "y1" : function(d){ return y(d);},
+                "y2" : function(d){ return y(d);},
+                "fill" : "none",
+                "shape-rendering" : "crispEdges",
+                "stroke" : "rgba(0,0,0,0.05)",
+                "stroke-width" : "1px"
+            });
+    svg.selectAll("line.verticalGrid").data(x.ticks(20)).enter()
+        .append("line")
+            .attrs({
+                "class":"verticalGrid",
+                "y1" : 0,
+                "y2" : height,
+                "x1" : function(d){ return x(d);},
+                "x2" : function(d){ return x(d);},
+                "fill" : "none",
+                "shape-rendering" : "crispEdges",
+                "stroke" : "rgba(0,0,0,0.05)",
+                "stroke-width" : "1px"
+            });
+
+    svg.append("rect").attrs({
+        "x" : 0,
+        "width" : function(d){ return x(parseTime(years[years.length - 1])); },
+        "y" : function(d){ return y(1.05);},
+        "height" : function(d){ return y(1/1.05) - y(1.05);},
+        "fill" : "rgba(0,0,0,0.1)",
+        "shape-rendering" : "crispEdges",
+    });
+});
+
+</script>
+</body>
