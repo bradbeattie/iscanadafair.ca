@@ -1,29 +1,40 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-    .line {
-        fill: none;
-        stroke: black;
-        stroke-width: 5px;
-        opacity: 0.9;
-    }
-    .liberal { stroke: lightcoral; }
-    .canadianalliance { stroke: cadetblue; }
-    .reform { stroke: mediumseagreen; }
-    .conservative { stroke: cornflowerblue; }
-    .pc { stroke: #0d5d93; }
-    .ndp { stroke: sandybrown; }
-    .bq { stroke: lightskyblue; }
-    .green { stroke: #2f873e; }
-</style>
-<body>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
-<script>
-var margin = {top: 20, right: 20, bottom: 30, left: 50};
-var width = 960 - margin.left - margin.right;
-var height = 500 - margin.top - margin.bottom;
-var parseTime = d3.timeParse("%Y-%m-%d");
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css?family=Cinzel|Open+Sans" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <style>
+            .line {
+                fill: none;
+                stroke: black;
+                stroke-width: 4px;
+            }
+            .liberal { stroke: lightcoral; }
+            .canadianalliance { stroke: cadetblue; }
+            .reform { stroke: mediumseagreen; }
+            .conservative { stroke: cornflowerblue; }
+            .socialcredit { stroke: lightgreen; }
+            .ralliementcréditiste { stroke: lightgreen; }
+            .ccf { stroke: #EEDDAA; }
+            .pc { stroke: #0d5d93; }
+            .ndp { stroke: sandybrown; }
+            .bq { stroke: lightskyblue; }
+            .green { stroke: #2f873e; }
+        </style>
+    </head>
+    <body id="app">
+        <div class="section" id="section-1">
+            <h1>&mdash; Canadian Proportionality &mdash;<br/><small>Comparing the ratio of seat % to vote %</small></h1>
+            <p>The graph below tracks the proportionality in parliament of each party.<br/>The grey bar along the centre is proportionality +/- 5%.</p>
+            <p>When a party has more seats than votes, they're above the grey bar.<br/>When they have more votes than seats, they're below.</p>
+            <script src="https://d3js.org/d3.v4.min.js"></script>
+            <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+            <script>
+var margin = {top: 10, right: 10, bottom: 30, left: 30};
+var width = 760 - margin.left - margin.right;
+var height = 400 - margin.top - margin.bottom;
+var parseDate = d3.timeParse("%Y-%m-%d");
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 var valueline = d3.line()
@@ -34,7 +45,7 @@ var valueline = d3.line()
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#section-1").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -63,7 +74,7 @@ d3.tsv("history.tsv", function(error, rawData) {
     var years = new Set([]);
     rawData.forEach(function(d) {
         years.add(d.date);
-        d.dateObj = parseTime(d.date);
+        d.dateObj = parseDate(d.date);
         d.proportionality = d["Seat %"] / d["Vote %"];
         parties.add(d.Party);
     });
@@ -71,12 +82,21 @@ d3.tsv("history.tsv", function(error, rawData) {
     years.push("2019-01-01");
 
     rawData = rawData.filter(function(d) {
-        return d.dateObj.getFullYear() > 1980;
+        return d.dateObj.getFullYear() > 1970;
     });
 
     // Scale the range of the data
-    x.domain([parseTime("1984-09-01"), parseTime(years[years.length - 1])]);
+    x.domain([parseDate("1972-10-01"), parseDate(years[years.length - 1])]);
     y.domain([0, d3.max(rawData, function(d) { return d.proportionality; })]);
+
+    svg.append("rect").attrs({
+        "x" : 0,
+        "width" : function(d){ return x(parseDate(years[years.length - 1])); },
+        "y" : function(d){ return y(1.05);},
+        "height" : function(d){ return y(1/1.05) - y(1.05);},
+        "fill" : "rgba(0,0,0,0.1)",
+        "shape-rendering" : "crispEdges",
+    });
 
     parties.forEach(function(selectedParty) {
         var data = [];
@@ -96,7 +116,7 @@ d3.tsv("history.tsv", function(error, rawData) {
         if (data.length) {
             var lastRecord = data[data.length - 1];
             data.push({
-                "dateObj": parseTime(years[years.indexOf(lastRecord.date) + 1]),
+                "dateObj": parseDate(years[years.indexOf(lastRecord.date) + 1]),
                 "proportionality": lastRecord.proportionality,
             })
             svg.append("path")
@@ -104,6 +124,7 @@ d3.tsv("history.tsv", function(error, rawData) {
                 .attr("class", "line " + selectedParty.replace(" ", "").toLowerCase())
                 .attr("d", valueline)
                 .attr("marker-end", lastRecord.dateObj.getFullYear() !== 2015 ? "url(#lastElection)": "")
+                .append("title").text(selectedParty)
         }
     });
 
@@ -142,16 +163,13 @@ d3.tsv("history.tsv", function(error, rawData) {
                 "stroke" : "rgba(0,0,0,0.05)",
                 "stroke-width" : "1px"
             });
-
-    svg.append("rect").attrs({
-        "x" : 0,
-        "width" : function(d){ return x(parseTime(years[years.length - 1])); },
-        "y" : function(d){ return y(1.05);},
-        "height" : function(d){ return y(1/1.05) - y(1.05);},
-        "fill" : "rgba(0,0,0,0.1)",
-        "shape-rendering" : "crispEdges",
-    });
 });
-
-</script>
-</body>
+            </script>
+        </div>
+        <div class="section" id="section-2">
+            <h2>Points of interest</h2>
+            <p>Note the significant dive of the PC party in 1993 corresponding with the appearance of the Reform party. This significant underrepresentation lasted 10 years until the 2003 merger. For historical context, see Stephen Harper's co-written 1997 article <a href="https://scribd.com/doc/51938443/Stephen-Harper-and-Tom-Flanagan-Our-Benign-Dictatorship-Next-City-Winter-1996-97">Our Benign Dictatorship</a>.</p>
+            <p>Further, note the 2011 dive of the Liberal party and the sole instance of NDP over-proportionality. In this context, we see the 2015 Liberal platform <a href="https://iscanadafair.ca">explicitly calling to end first-past-the-post</a>. The subsequent election won them a majority and the ability to follow through with this promise.</p>
+        </div>
+    </body>
+</html>

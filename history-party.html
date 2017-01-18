@@ -21,12 +21,12 @@ body {
 .area.NDP { fill: sandybrown; }
 .area.BQ { fill: lightskyblue; }
 .area.Green { fill: #2F873E; }
-.area.below { opacity: 0.6; }
+.area.below { fill: rgba(0,0,0,0.3); }
 
 .line {
   fill: none;
   stroke: #000;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
 }
 
 </style>
@@ -85,7 +85,7 @@ d3.tsv("history.tsv", function(error, rawData) {
     d.date = parseDate(d.date);
   });
   rawData.filter(function(d) {
-      return d.Party === selectedParty && d.date.getFullYear() > 1950
+      return d.Party === selectedParty && d.date.getFullYear() > 1970
   }).forEach(function(d) {
     data.push({
       "date": d.date,
@@ -181,7 +181,7 @@ d3.tsv("history.tsv", function(error, rawData) {
         .attr("y", y(latestD["Vote %"]) - 140)
         .attr("text-anchor", "end")
         .style("font-size", "14px")
-        .text(latestD.date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote and " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
+        .text(latestD.date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote but " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
 
 
     svg.append("svg:defs").append("svg:marker")
