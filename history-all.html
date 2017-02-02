@@ -2,8 +2,12 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=700, initial-scale=1.0">
+        <link rel="icon" href="favicon.ico" type="image/x-icon"/>
         <link href="https://fonts.googleapis.com/css?family=Cinzel|Open+Sans" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Canadian Proportionality &mdash; Comparing seat to vote ratios</title>
+        <link rel="stylesheet" type="text/css" href="style2017.css">
         <style>
             .line {
                 fill: none;
@@ -25,9 +29,9 @@
     </head>
     <body id="app">
         <div class="section" id="section-1">
-            <h1>&mdash; Canadian Proportionality &mdash;<br/><small>Comparing the ratio of seat % to vote %</small></h1>
-            <p>The graph below tracks the proportionality in parliament of each party.<br/>The grey bar along the centre is proportionality +/- 5%.</p>
-            <p>When a party has more seats than votes, they're above the grey bar.<br/>When they have more votes than seats, they're below.</p>
+            <h1>&mdash; Canadian Proportionality &mdash;<br/><small>Comparing the seat to vote ratios</small></h1>
+            <p>The graph below tracks the proportionality in parliament.<br/>The grey bar highlights periods of underrepresentation.</p>
+            <p>Parties with more seats than votes are above the grey bar.<br/>Parties with fewer seats than votes are below it.</p>
             <script src="https://d3js.org/d3.v4.min.js"></script>
             <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
             <script>
@@ -92,9 +96,9 @@ d3.tsv("history.tsv", function(error, rawData) {
     svg.append("rect").attrs({
         "x" : 0,
         "width" : function(d){ return x(parseDate(years[years.length - 1])); },
-        "y" : function(d){ return y(1.05);},
-        "height" : function(d){ return y(1/1.05) - y(1.05);},
-        "fill" : "rgba(0,0,0,0.1)",
+        "y" : function(d){ return y(1);},
+        "height" : function(d){ return y(0) - y(1);},
+        "fill" : "rgba(0,0,0,0.15)",
         "shape-rendering" : "crispEdges",
     });
 
@@ -169,7 +173,10 @@ d3.tsv("history.tsv", function(error, rawData) {
         <div class="section" id="section-2">
             <h2>Points of interest</h2>
             <p>Note the significant dive of the PC party in 1993 corresponding with the appearance of the Reform party. This significant underrepresentation lasted 10 years until the 2003 merger. For historical context, see Stephen Harper's co-written 1997 article <a href="https://scribd.com/doc/51938443/Stephen-Harper-and-Tom-Flanagan-Our-Benign-Dictatorship-Next-City-Winter-1996-97">Our Benign Dictatorship</a>.</p>
-            <p>Further, note the 2011 dive of the Liberal party and the sole instance of NDP over-proportionality. In this context, we see the 2015 Liberal platform <a href="https://iscanadafair.ca">explicitly calling to end first-past-the-post</a>. The subsequent election won them a majority and the ability to follow through with this promise.</p>
+            <p>Further, note the 2011 dive of the Liberal party and the sole instance of NDP over-proportionality. In this context, we see the 2015 Liberal platform <a href="https://iscanadafair.ca">explicitly calling to end first-past-the-post</a>. The subsequent election won them a majority and the ability to follow through with this promise, though the promise was ultimately broken in 2017 with Trudeau's revised mandate for Gould.</p>
         </div>
+        <footer class="section">
+            <p><a href="/#section-4">Return to iscanadafair.ca for more context</a></p>
+        </footer>
     </body>
 </html>
