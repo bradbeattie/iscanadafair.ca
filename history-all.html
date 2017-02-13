@@ -70,15 +70,15 @@ var markerRadius = 1.1
         .attr("cy", markerRadius)
 
 // Get the data
-d3.tsv("history.tsv", function(error, rawData) {
+d3.tsv("history-per-year-and-party.tsv", function(error, rawData) {
     if (error) throw error;
 
     // format the data
     var parties = new Set([]);
     var years = new Set([]);
     rawData.forEach(function(d) {
-        years.add(d.date);
-        d.dateObj = parseDate(d.date);
+        years.add(d.Date);
+        d.dateObj = parseDate(d.Date);
         d.proportionality = d["Seat %"] / d["Vote %"];
         parties.add(d.Party);
     });
@@ -86,11 +86,11 @@ d3.tsv("history.tsv", function(error, rawData) {
     years.push("2019-01-01");
 
     rawData = rawData.filter(function(d) {
-        return d.dateObj.getFullYear() > 1970;
+        return d.dateObj.getFullYear() > 1940;
     });
 
     // Scale the range of the data
-    x.domain([parseDate("1972-10-01"), parseDate(years[years.length - 1])]);
+    x.domain([parseDate("1945-05-01"), parseDate(years[years.length - 1])]);
     y.domain([0, d3.max(rawData, function(d) { return d.proportionality; })]);
 
     svg.append("rect").attrs({
@@ -120,7 +120,7 @@ d3.tsv("history.tsv", function(error, rawData) {
         if (data.length) {
             var lastRecord = data[data.length - 1];
             data.push({
-                "dateObj": parseDate(years[years.indexOf(lastRecord.date) + 1]),
+                "dateObj": parseDate(years[years.indexOf(lastRecord.Date) + 1]),
                 "proportionality": lastRecord.proportionality,
             })
             svg.append("path")

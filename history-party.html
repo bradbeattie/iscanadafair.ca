@@ -62,12 +62,12 @@ var yAxis = d3.svg.axis()
 
 var line = d3.svg.area()
     .interpolate("step-after")
-    .x(function(d) { return x(d.date); })
+    .x(function(d) { return x(d.Date); })
     .y(function(d) { return y(d["Vote %"]); });
 
 var area = d3.svg.area()
     .interpolate("step-after")
-    .x(function(d) { return x(d.date); })
+    .x(function(d) { return x(d.Date); })
     .y1(function(d) { return y(d["Vote %"]); });
 
 var svg = d3.select("body").append("svg")
@@ -76,31 +76,31 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("history.tsv", function(error, rawData) {
+d3.tsv("history-per-year-and-party.tsv", function(error, rawData) {
   if (error) throw error;
 
   var data = []
   var latestD;
   rawData.forEach(function(d) {
-    d.date = parseDate(d.date);
+    d.Date = parseDate(d.Date);
   });
   rawData.filter(function(d) {
-      return d.Party === selectedParty && d.date.getFullYear() > 1970
+      return d.Party === selectedParty && d.Date.getFullYear() > 1970
   }).forEach(function(d) {
     data.push({
-      "date": d.date,
+      "Date": d.Date,
       "Vote %": d["Vote %"],
       "Seat %": d["Seat %"],
     });
     latestD = d;
   });
     data.push({
-      "date": (new Date(latestD.date.valueOf() + 86400 * 1000 * 365 * 3)),
+      "Date": (new Date(latestD.Date.valueOf() + 86400 * 1000 * 365 * 3)),
       "Vote %": latestD["Vote %"],
       "Seat %": latestD["Seat %"],
     });
 
-  x.domain(d3.extent(data, function(d) { return d.date; }));
+  x.domain(d3.extent(data, function(d) { return d.Date; }));
 
   y.domain([
     0, 0.8
@@ -181,7 +181,7 @@ d3.tsv("history.tsv", function(error, rawData) {
         .attr("y", y(latestD["Vote %"]) - 140)
         .attr("text-anchor", "end")
         .style("font-size", "14px")
-        .text(latestD.date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote but " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
+        .text(latestD.Date.getFullYear() + "'s election won them " + formatPercentDetailed(latestD["Vote %"]) + " of the vote but " + formatPercentDetailed(latestD["Seat %"]) + " of the seats");
 
 
     svg.append("svg:defs").append("svg:marker")
