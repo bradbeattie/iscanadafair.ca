@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}The Gallagher Index &ndash; {{ super() }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .highlight { color: #D00; }
+    h3 .highlight { font-size: 150%; line-height: 1.5em; }
+    td .highlight { font-weight: bold; }
+    input { font-family: monospace; text-align: center; }
+    input[disabled] { background: rgba(0,0,0,0.05) !important; }
+    table { margin: 0 auto; }
+    th, td { text-align: center; padding: 0.3em 0.2em; }
+    td.hovered input { box-shadow: inset 0 0 1em rgba(0,0,0,0.5); }
+    tbody th, tfoot th { text-align: right; white-space: nowrap; padding-right: 0.5em; }
+
+    .form-control { width: 5.5em; }
+    .form-control.wider { width: 7em; }
+    @media (max-width: 767px) {
+        .form-control.wider { width: 5em; }
+        .form-control { width: 4em; }
+    }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance:textfield; }
+</style>
+{% endblock %}
+{% block content %}
+{% raw %}
+<div id="app" class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="text-center">What is the Gallagher Index?</h1>
+            <div class="jumbotron text-center">
+                <p><strong>The Gallagher Index measures how unfair <span class="nowrap">a voting system is</span>.</strong></p>
+                <p>It looks at how we voted.<br />It looks at how we're represented.<br />Then it says how different those two are.</p>
+                <p>A high Gallagher index means that some parties are getting more than their fair share of seats.</p>
+            </div>
+            <p>In December 2016, Canada's <a href="https://www.ourcommons.ca/Committees/en/ERRE?parl=42&session=1">2016 Special Committee On Electoral Reform</a> made the following recommendation to parliament:</p>
+            <blockquote>
+                <p>
+                The Committee recommends that the Government should, as it develops
+                a new electoral system, use the Gallagher index in order to minimize the
+                level of distortion between the popular will of the electorate and the
+                resultant seat allocations in Parliament. <strong><span class="nowrap">The government should seek to design a system</span>
+                <span class="nowrap">that achieves a Gallagher score of 5 or less.</span></strong></p>
+                <footer>
+                    <a href="https://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408/">Recommendation #1 of Report 3: <cite>Strengthening Democracy in Canada: Principles, Process and Public Engagement for Electoral Reform</cite></a>
+                </footer>
+            </blockquote>
+        </div>
+        <div class="col-lg-6 text-center">
+            <h2>How is it calculated?</h2>
+            <p>Consider Canada's 2015 federal election.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Votes</th>
+                        <th>Seats</th>
+                        <th>Vote %</th>
+                        <th>Seat %</th>
+                        <th><span class="hidden-xs">Difference</span><span class="visible-xs">Diff</span></th>
+                        <th>Squared</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="party in selectedExample.parties">
+                        <th>{{ party.abbr }}</th>
+                        <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.votes" class="form-control wider" /></td>
+                        <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.seats" class="form-control" /></td>
+                        <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" /></td>
+                        <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" /></td>
+                        <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
+                        <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6">Sum</th>
+                        <td class="cell-sum"><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
+                    </tr>
+                    <tr>
+                        <th colspan="6">Halved</th>
+                        <td class="cell-half"><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
+                    </tr>
+                    <tr>
+                        <th colspan="6">Square rooted</th>
+                        <td class="cell-squareroot"><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
+            <div class="jumbotron">
+                <p>So now when someone shows you this formula</p>
+                <p>
+                    <img src="/static/images/gallagher-index.png" width="359" height="139" usemap="#gallagher-index-map" />
+                    <map name="gallagher-index-map">
+                        <!-- #$-:Image map file created by GIMP Image Map plug-in -->
+                        <!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+                        <!-- #$-:Please do not edit lines starting with "#$" -->
+                        <!-- #$VERSION:2.3 -->
+                        <!-- #$AUTHOR:Brad Beattie -->
+                        <area shape="poly" coords="0,59,21,59,21,0,359,1,359,8,35,7,34,139,21,139,0,85" title="Square rooted" id="map-squareroot" />
+                        <area shape="rect" coords="45,15,83,128" title="Halved" id="map-half" />
+                        <area shape="rect" coords="90,10,158,139" title="Summed" id="map-sum" />
+                        <area shape="rect" coords="174,47,219,95" title="Vote %" id="map-votes" />
+                        <area shape="rect" coords="273,47,320,95" title="Seat %" id="map-seats" />
+                        <area shape="rect" coords="227,47,267,95" title="Difference" id="map-difference" />
+                        <area shape="rect" coords="335,37,356,97" title="Squared" id="map-squared" />
+                    </map>
+                </p>
+                <p>you know it's just a way to calculate average fairness.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endraw %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.min.js"></script>
+<script>
+
+$(function() {
+    $("area").hover(
+        function (event) {
+            $(".cell-" + this.id.replace("map-", "")).addClass("hovered")
+        },
+        function (event) {
+            $(".cell-" + this.id.replace("map-", "")).removeClass("hovered")
+        }
+    );
+})
+
+function per (value) {
+    return (Math.round(value * 10) / 10).toFixed(1)
+}
+
+new Vue({
+    el: '#app',
+    data: {
+        examples: [
+            {"title": "42nd Canadian Parliament", "parties": [
+                {"name": "Liberal", "abbr": "Lib", seats: 184, votes: 6943276},
+                {"name": "Conservative", "abbr": "Cons", seats: 99, votes: 5613614},
+                {"name": "New Democrat", "abbr": "NDP", seats: 44, votes: 3470350},
+                {"name": "Bloc Québécois", "abbr": "BQ", seats: 10, votes: 821144},
+                {"name": "Green", seats: 1, "abbr": "Green", votes: 602944},
+            ]},
+        ],
+        selectedExample: null,
+        totalSeats: 0,
+        totalVotes: 0,
+        diffSquaredSum: 0,
+        gallagherIndex: 0,
+    },
+    methods: {
+        recomputeTotals: function() {
+            var v = this
+            v.totalVotes = v.selectedExample.parties.reduce(function(total, party) {
+                return total + party.votes
+            }, 0)
+            v.totalSeats = v.selectedExample.parties.reduce(function(total, party) {
+                return total + party.seats
+            }, 0)
+            v.selectedExample.parties.forEach(function(party) {
+                party.seatPercentage = 100 * party.seats / v.totalSeats
+                party.votePercentage = 100 * party.votes / v.totalVotes
+                party.difference = party.votePercentage - party.seatPercentage
+            }, 0)
+            v.diffSquaredSum = v.selectedExample.parties.reduce(function(total, party) {
+                return total + Math.pow(party.difference, 2)
+            }, 0)
+            v.gallagherIndex = per(Math.pow(v.diffSquaredSum / 2, 0.5))
+        }
+    },
+    created: function() {
+        this.selectedExample = this.examples[0]
+        this.recomputeTotals()
+    },
+    watch: {
+        examples: {
+            handler: function() { this.recomputeTotals() },
+            deep: true
+        }
+    }
+})
+</script>
+{% endblock %}

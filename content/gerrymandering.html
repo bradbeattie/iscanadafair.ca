@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Gerrymandering &ndash; {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">What is Gerrymandering?</h1>
+    <div class="landscapes">
+        <div class="jumbotron">
+            <p>Gerrymandering is the practice of abusing electoral riding boundaries to distort the outcome of an election.</p>
+        </div>
+        <iframe src="https://www.youtube-nocookie.com/embed/Mky11UJb9AY?list=PL7679C7ACE93A5638?rel=0" frameborder="0" allowfullscreen></iframe>
+        <a href="http://polytrope.com/district/">
+            <h3>District<br /><small>A Game about Representation & Redistricting</small></h3>
+            <img src="/static/images/polytrope-district.jpg" />
+        </a>
+        <iframe src="//www.cbc.ca/i/caffeine/syndicate/?mediaId=2675482754" frameborder="0" allowfullscreen></iframe>
+        <a href="https://en.m.wikipedia.org/wiki/Gerrymandering">
+            <h3>Wikipedia on Gerrymandering</h3>
+            <img src="/static/images/wikipedia-gerrymandering.jpg" />
+        </a>
+    </div>
+</div>
+{% endblock %}

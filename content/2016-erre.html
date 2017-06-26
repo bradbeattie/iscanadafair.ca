@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}2016 &ndash; {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container timeline">
+    <h1>2016: Canada's Special Committee on Electoral Reform</h1>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>On May 10th, seven months after the election, Maryam Monsef (Minister of Democratic Institutions) began plans to form the Special Committee.</p>
+                <p>The initial composition of the committee was criticised as unfairly favouring the Liberal Party, and was adjusted the next month to reflect the popular vote.</p>
+                <p>On June 21st, 2016, the all-party Special Committee on Electoral Reform began its work engaging with Canadians to find our best way forward.</p>
+            </div>
+            <div class="col-sm-6">
+                <img src="/static/images/erre-composition.jpg" />
+            </div>
+        </div>
+    </div>
+    <h2>Touring Canada</h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>The Special Committee then travelled for five months seeking the testimony of experts and non-experts alike. The accomanying video should give you an impression of those meetings.</p>
+                <p>Additionally, the committee launched <a href="http://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-423">an online consultation to elicit feedback from the general public</a>, including clear questions such as <q>Seats should be allocated in proportion to the percentage of votes received by each political party</q> and <q>Independent candidates should be able to be elected to Parliament</q>.</p>
+            </div>
+            <div class="col-sm-6">
+                <iframe src="https://www.youtube-nocookie.com/embed/Altu7P0PHbg?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <h2>Reporting back to Parliament</h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>On June 21st, 2016, the all-party Special Committee on Electoral Reform began its work engaging with Canadians to find our best way forward. On December 1st, they submitted to parliament <a target="_blank" href="https://www.ourcommons.ca/Content/Committee/421/ERRE/Reports/RP8655791/errerp03/errerp03-e.pdf">a 168 page report with 13 specific recommendations</a>.</p>
+                <p>Recommendation #1?</p>
+                <p>To pick a new system we need to first measure how fair it is, and we can measure fairness with the Gallagher Index.</p>
+                <p><a class="btn btn-info btn-lg btn-block" href="/gallagher-index">Try playing with the Interactive Gallagher Index Calculator</a></p>
+            </div>
+            <div class="col-sm-6">
+                <blockquote>
+                    <p>The Committee recommends that the Government should, as it develops a new electoral system, use the Gallagher index in order to minimize the level of distortion between the popular will of the electorate and the resultant seat allocations in Parliament. The government should seek to design a system that achieves a Gallagher score of 5 or less.</p>
+                        <footer><a href="http://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408">ERRE Committee Report, Recommendation #1</a></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <h2>The Government's Response</h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <iframe src="https://www.youtube-nocookie.com/embed/esw8gbfuMDA?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube-nocookie.com/embed/OCB3cH28MfQ?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+                <!-- <iframe src="https://www.youtube-nocookie.com/embed/XsmfLRaSb1Y?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe> -->
+            </div>
+            <div class="col-sm-6">
+                <p>Maryam Monsef (Minister of Democratic Institutions) criticised the recommendation of the Committee, reading the forumla out loud in an attempt to make it sound more complex than it is.</p>
+                <p>Later that day, Monsef engaged with the press.</p>
+                <blockquote>
+                    <p>While they've offered concrete recommendations on online voting and mandatory voting, they've not helped answer the hardest question of all, which is an alternative to first past the post.</p>
+                    <p class="text-right" style="font-size: 80%">Yes, but with respect you didn't ask them to. You asked them to identify and research different system. You didn't ask them to come up with an alternative.</p>
+                    <p>And they have not provided us with a recommendation. Instead they've offered us this: The Gallagher Index. A formula for Canadians to go out and determine.</p>
+                    <footer>Monesf responding to a reporter, Dec 1st</footer>
+                </blockquote>
+                <p>She reiterated that a new online consulation would be coming shortly, bringing us to the story of MyDemocracy.ca.</p>
+            </div>
+        </div>
+    </div>
+    <div class="landscapes">
+        <a href="/2015">
+            <h3>&laquo; 2015<br /><small>A Promise Made</small></h3>
+            <img src="/static/images/timeline-2015.jpg" />
+        </a>
+        <a href="/2016-mydemocracy">
+            <h3>2016 &raquo;<br /><small>MyDemocracy.ca</small></h3>
+            <img src="/static/images/timeline-2016-mydemocracy.jpg" />
+        </a>
+    </div>
+</div>
+{% endblock %}

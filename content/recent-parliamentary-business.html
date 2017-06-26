@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Recent Parliamentary Business &ndash; {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Stay up-to-date</h1>
+    <div class="landscapes">
+        <a href="http://parlvu.parl.gc.ca/XRender/en/View/Year/">
+            <h3>ParlVu<br /><small>Live streaming of the House of Commons proceedings</small></h3>
+            <img src="/static/images/parlvu.jpg" />
+        </a>
+        <a href="http://www.cpac.ca/en/?s&type=videos">
+            <h3>CPAC<br /><small>Providing a window on Parliament, politics and public affairs</small></h3>
+            <img src="/static/images/cpac.jpg" />
+        </a>
+        <a href="https://openparliament.ca/">
+            <h3>openparliament.ca<br /><small>Helping you keep tabs <span class="nowrap">on your representatives</span></small></h3>
+            <img src="/static/images/openparliament.ca.jpg" />
+        </a>
+    </div>
+</div>
+{% endblock %}

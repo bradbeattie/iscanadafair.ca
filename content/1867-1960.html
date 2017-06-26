@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}1867-1960 &ndash; {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container timeline">
+    <h1>1867: </h1>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <blockquote>
+                    <p>For example, to be qualified to vote in a city, a man was required to own real property valued at $300 or more.</p>
+                    <footer><a href="http://www.elections.ca/content.aspx?section=res&dir=his&document=chap2&lang=e#a23">Elections Canada, <cite>The Electoral Mosaic, 1867–1885</cite></footer>
+                </blockquote>
+                <p><a href="http://www.elections.ca/content.aspx?section=res&dir=his&document=index&lang=e">A History of the Vote in Canada, Elections Canada</a></p>
+                <p><a href="http://thecanadianencyclopedia.ca/en/article/voting-in-early-canada-feature/">Voting in Early Canada, The Canadian Encyclopedia</a></p>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
+    <h2>1918: </h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>Women</p>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
+    <h2>1948: </h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>Asian Canadians</p>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
+    <h2>1960: </h2>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <p>First Nations</p>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
+    <div class="landscapes">
+        <a href="/1215">
+            <h3>&laquo; 1215<br /><small>Magna Carta</small></h3>
+            <img src="/static/images/timeline-1215.jpg" />
+        </a>
+        <a href="/1964">
+            <h3>1964 &raquo;<br /><small>Ending Gerrymandering</small></h3>
+            <img src="/static/images/timeline-1964.jpg" />
+        </a>
+    </div>
+</div>
+{% endblock %}

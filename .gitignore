@@ -1,0 +1,5 @@
+.env*
+*.swp
+*~
+Python-3.*
+www/*.html
