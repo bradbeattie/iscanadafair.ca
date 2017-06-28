@@ -18,9 +18,9 @@
     table .form-control { width: 5.5em; padding: 0; }
     .form-control.wider { width: 7em; }
     @media (max-width: 767px) {
-        table, table .form-control { font-size: 90% }
-        .form-control.wider { width: 5em; }
-        .form-control { width: 4em; }
+        table, table .form-control { font-size: 85% }
+        table .form-control.wider { width: 5em; }
+        table .form-control { width: 4em; }
     }
 
     input[type=number]::-webkit-outer-spin-button,
@@ -185,7 +185,7 @@ $(document).ready(function() {
             })
             Object.keys(years).sort().forEach(function(key, i) {
                 examples.push({
-                    "title": "Canada's " + ordinal_suffix_of(i + 1) + " General Election (" + key + ")",
+                    "title": ordinal_suffix_of(i + 1) + " General Election (" + key + ")",
                     "parties": years[key]
                 })
             })
