@@ -14,8 +14,8 @@
     th, td { text-align: center; padding: 0.3em 0.2em; }
     td.hovered input { box-shadow: inset 0 0 1em rgba(0,0,0,0.5); }
     tbody th, tfoot th { text-align: right; white-space: nowrap; padding-right: 0.5em; }
-
-    .form-control { width: 5.5em; }
+    p .form-control { display: inline-block; width: auto; }
+    table .form-control { width: 5.5em; }
     .form-control.wider { width: 7em; }
     @media (max-width: 767px) {
         .form-control.wider { width: 5em; }
@@ -51,9 +51,9 @@
                 </footer>
             </blockquote>
         </div>
-        <div class="col-lg-6 text-center">
+        <div class="col-lg-6 text-center" v-if="selectedExample">
             <h2>How is it calculated?</h2>
-            <p>Consider Canada's 2015 federal election.</p>
+            <p><select v-model="selectedIndex" class="form-control"><option v-for="(example, index) in examples" :value="index">{{ example.title }}</option></select></p>
             <table>
                 <thead>
                     <tr>
@@ -68,9 +68,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="party in selectedExample.parties">
-                        <th>{{ party.abbr }}</th>
-                        <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.votes" class="form-control wider" /></td>
-                        <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.seats" class="form-control" /></td>
+                        <th>{{ party.Party }}</th>
+                        <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
+                        <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
                         <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" /></td>
                         <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" /></td>
                         <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
@@ -136,58 +136,121 @@ $(function() {
     );
 })
 
-function per (value) {
+function per(value) {
     return (Math.round(value * 10) / 10).toFixed(1)
 }
 
-new Vue({
-    el: '#app',
-    data: {
-        examples: [
-            {"title": "42nd Canadian Parliament", "parties": [
+function toObject(names, values) {
+    var result = {};
+    for (var i = 0; i < names.length; i++)
+         result[names[i]] = values[i];
+    return result;
+}
+
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
+var examples = []
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "/static/data/history-per-year-and-party.tsv",
+        dataType: "text",
+        success: function(allText) {
+            var headers = [];
+            var years = {};
+            allText.split(/\r\n|\n/).forEach(function (line, i) {
+                var data = line.split('\t').map(function(val) {
+                    return val.indexOf("-") !== -1 ? val : parseFloat(val) || val
+                });
+                if (i === 0) headers = data
+                else if (data.length == headers.length) {
+                    obj = toObject(headers, data);
+                    if (years[obj.Date] === undefined) years[obj.Date] = []
+                    years[obj.Date].push(obj)
+                }
+            })
+            Object.keys(years).sort().forEach(function(key, i) {
+                examples.push({
+                    "title": "Canada's " + ordinal_suffix_of(i + 1) + " General Election (" + key + ")",
+                    "parties": years[key]
+                })
+            })
+            startVue(examples)
+        }
+    }).fail(function() {
+        startVue([
+            {"title": "Canada's 42nd General Election (2015)", "parties": [
                 {"name": "Liberal", "abbr": "Lib", seats: 184, votes: 6943276},
                 {"name": "Conservative", "abbr": "Cons", seats: 99, votes: 5613614},
                 {"name": "New Democrat", "abbr": "NDP", seats: 44, votes: 3470350},
                 {"name": "Bloc Québécois", "abbr": "BQ", seats: 10, votes: 821144},
                 {"name": "Green", seats: 1, "abbr": "Green", votes: 602944},
             ]},
-        ],
-        selectedExample: null,
-        totalSeats: 0,
-        totalVotes: 0,
-        diffSquaredSum: 0,
-        gallagherIndex: 0,
-    },
-    methods: {
-        recomputeTotals: function() {
-            var v = this
-            v.totalVotes = v.selectedExample.parties.reduce(function(total, party) {
-                return total + party.votes
-            }, 0)
-            v.totalSeats = v.selectedExample.parties.reduce(function(total, party) {
-                return total + party.seats
-            }, 0)
-            v.selectedExample.parties.forEach(function(party) {
-                party.seatPercentage = 100 * party.seats / v.totalSeats
-                party.votePercentage = 100 * party.votes / v.totalVotes
-                party.difference = party.votePercentage - party.seatPercentage
-            }, 0)
-            v.diffSquaredSum = v.selectedExample.parties.reduce(function(total, party) {
-                return total + Math.pow(party.difference, 2)
-            }, 0)
-            v.gallagherIndex = per(Math.pow(v.diffSquaredSum / 2, 0.5))
+        ])
+    });
+});
+
+
+function startVue(examples) {
+    new Vue({
+        el: '#app',
+        data: {
+            examples: examples,
+            selectedIndex: 0,
+            selectedExample: null,
+            totalSeats: 0,
+            totalVotes: 0,
+            diffSquaredSum: 0,
+            gallagherIndex: 0,
+        },
+        methods: {
+            recomputeTotals: function() {
+                console.log("RECOMPUTE", )
+                var v = this
+                v.selectedExample = v.examples[v.selectedIndex]
+                v.totalVotes = v.selectedExample.parties.reduce(function(total, party) {
+                    return total + party.Votes
+                }, 0)
+                v.totalSeats = v.selectedExample.parties.reduce(function(total, party) {
+                    return total + party.Seats
+                }, 0)
+                v.selectedExample.parties.forEach(function(party) {
+                    party.seatPercentage = 100 * party.Seats / v.totalSeats
+                    party.votePercentage = 100 * party.Votes / v.totalVotes
+                    party.difference = party.votePercentage - party.seatPercentage
+                }, 0)
+                v.diffSquaredSum = v.selectedExample.parties.reduce(function(total, party) {
+                    return total + Math.pow(party.difference, 2)
+                }, 0)
+                v.gallagherIndex = per(Math.pow(v.diffSquaredSum / 2, 0.5))
+            }
+        },
+        created: function() {
+            this.selectedIndex = this.examples.length - 1
+        },
+        watch: {
+            examples: {
+                handler () { this.recomputeTotals() },
+                deep: true
+            },
+            selectedIndex () {
+                this.recomputeTotals()
+            }
         }
-    },
-    created: function() {
-        this.selectedExample = this.examples[0]
-        this.recomputeTotals()
-    },
-    watch: {
-        examples: {
-            handler: function() { this.recomputeTotals() },
-            deep: true
-        }
-    }
-})
+    })
+}
 </script>
 {% endblock %}
