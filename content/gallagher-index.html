@@ -126,17 +126,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.min.js"></script>
 <script>
 
-$(function() {
-    $("area").hover(
-        function (event) {
-            $(".cell-" + this.id.replace("map-", "")).addClass("hovered")
-        },
-        function (event) {
-            $(".cell-" + this.id.replace("map-", "")).removeClass("hovered")
-        }
-    );
-})
-
 function per(value) {
     return (Math.round(value * 10) / 10).toFixed(1)
 }
@@ -241,6 +230,16 @@ function startVue(examples) {
         },
         created: function() {
             this.selectedIndex = this.examples.length - 1
+            setTimeout(function() {
+                $("area").hover(
+                    function (event) {
+                        $(".cell-" + this.id.replace("map-", "")).addClass("hovered")
+                    },
+                    function (event) {
+                        $(".cell-" + this.id.replace("map-", "")).removeClass("hovered")
+                    }
+                )
+            }, 0)
         },
         watch: {
             examples: {
