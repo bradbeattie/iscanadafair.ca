@@ -84,7 +84,7 @@ var markerRadius = 1.1
         .attr("cy", markerRadius)
 
 // Get the data
-d3.tsv("static/data/history-per-year-and-party.tsv", function(error, rawData) {
+d3.tsv("/static/data/history-per-year-and-party.tsv", function(error, rawData) {
     if (error) throw error;
 
     // format the data
