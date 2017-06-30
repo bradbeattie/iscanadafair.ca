@@ -8,16 +8,16 @@
     svg { width: 100%; }
     .line { fill: none; stroke: black; stroke-width: 5px; }
     .lib { stroke: lightcoral; }
-    .alliance { stroke: cadetblue; }
-    .reform { stroke: mediumseagreen; }
-    .cons { stroke: cornflowerblue; }
-    .socred { stroke: lightgreen; }
+    .ca { stroke: cadetblue; }
+    .ref { stroke: mediumseagreen; }
+    .c { stroke: cornflowerblue; }
+    .sc { stroke: lightgreen; }
     .ralcred { stroke: lightgreen; }
     .ccf { stroke: #EEDDAA; }
     .pc { stroke: #0d5d93; }
     .ndp { stroke: sandybrown; }
     .bq { stroke: lightskyblue; }
-    .green { stroke: #2f873e; }
+    .gp { stroke: #2f873e; }
 </style>
 {% endblock %}
 
@@ -94,17 +94,17 @@ d3.tsv("/static/data/history-per-year-and-party.tsv", function(error, rawData) {
         years.add(d.Date);
         d.dateObj = parseDate(d.Date);
         d.proportionality = d["Seat %"] / d["Vote %"];
-        parties.add(d.Party);
+        if (d.Party !== "others") parties.add(d.Party);
     });
     years = Array.from(years).sort();
     years.push("2019-01-01");
 
     rawData = rawData.filter(function(d) {
-        return d.dateObj.getFullYear() > 1940;
+        return d.dateObj.getFullYear() > 1971;
     });
 
     // Scale the range of the data
-    x.domain([parseDate("1945-05-01"), parseDate(years[years.length - 1])]);
+    x.domain([parseDate("1972-09-01"), parseDate(years[years.length - 1])]);
     y.domain([0, d3.max(rawData, function(d) { return d.proportionality; })]);
 
     svg.append("rect").attrs({
@@ -137,12 +137,13 @@ d3.tsv("/static/data/history-per-year-and-party.tsv", function(error, rawData) {
                 "dateObj": parseDate(years[years.indexOf(lastRecord.Date) + 1]),
                 "proportionality": lastRecord.proportionality,
             })
+            console.log(selectedParty)
             svg.append("path")
                 .data([data])
-                .attr("class", "line " + selectedParty.replace(" ", "").toLowerCase())
+                .attr("class", "line " + selectedParty)
                 .attr("d", valueline)
                 .attr("marker-end", lastRecord.dateObj.getFullYear() !== 2015 ? "url(#lastElection)": "")
-                .append("title").text(selectedParty)
+                .append("title").text(latestD.Longname)
         }
     });
 

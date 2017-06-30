@@ -69,11 +69,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="party in selectedExample.parties">
-                        <th>{{ party.Party }}</th>
+                        <th>{{ party.Shortname.replace(/\./g, "") }}</th>
                         <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
                         <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
-                        <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" /></td>
-                        <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" /></td>
+                        <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
+                        <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" :style="{ fontWeight: party.seatPercentage > 50 ? 'bold' : 'normal' }" /></td>
                         <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
                         <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
                     </tr>
@@ -208,14 +208,13 @@ function startVue(examples) {
         },
         methods: {
             recomputeTotals: function() {
-                console.log("RECOMPUTE", )
                 var v = this
                 v.selectedExample = v.examples[v.selectedIndex]
                 v.totalVotes = v.selectedExample.parties.reduce(function(total, party) {
-                    return total + party.Votes
+                    return total + parseInt(party.Votes)
                 }, 0)
                 v.totalSeats = v.selectedExample.parties.reduce(function(total, party) {
-                    return total + party.Seats
+                    return total + parseInt(party.Seats)
                 }, 0)
                 v.selectedExample.parties.forEach(function(party) {
                     party.seatPercentage = 100 * party.Seats / v.totalSeats
