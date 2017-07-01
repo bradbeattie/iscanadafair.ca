@@ -20,7 +20,7 @@
             .btn { white-space: inherit; }
             .container .jumbotron { border: 1px solid #e3e3e3; padding: 20px; margin-bottom: 22px; }
             .jumbotron + h2 { margin-top: 40px; }
-            .jumbotron p:last-of-type { margin-bottom: 5px; }
+            blockquote p:last-of-type { margin-bottom: 5px; }
             .jumbotron ul, .jumbotron ol { font-size: 21px; font-weight: 200; margin-bottom: 15px; }
             .well, .jumbotron { background: hsla(0, 0%, 100%, 0.9); }
             .well > *:last-child { margin-bottom: 0 !important; }
@@ -31,8 +31,11 @@
             .timeline > .landscapes { margin-top: 60px; }
             .jumbotron > *:first-child { margin-top: 0; }
             .jumbotron > *:last-child { margin-bottom: 0; }
-            .row > * > img, img.block { border-radius: 6px; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); width: 100%; display: block; }
+            img.block { border-radius: 6px; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); width: 100%; display: block; }
             p + blockquote { margin-top: 22px; }
+            .reveal { opacity: 0.3; filter: blur(5px) grayscale(50%); pointer-events: none; }
+            .reveal.revealed { opacity: 1; filter: none;  pointer-events: initial; }
+            button[data-reveal-trigger] { border: 3px outset #3097D1; }
 
             /* Landscapes */
             .landscapes { display: flex; justify-content: center; flex-wrap: wrap; text-align: center; margin-bottom: 22px; }
@@ -41,11 +44,12 @@
             .landscapes > * { box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); }
             .landscapes > *, .landscapes > a, .landscapes > a > img { width: 560px; min-height: 315px; }
             .landscapes > h2 { width: auto; min-height: auto; box-shadow: none; }
+            .landscapes > a + h2 { margin-top: 1em; }
             .landscapes > a { border-radius: 6px; }
             .landscapes > a, .landscapes > div { position: relative; display: flex; justify-content: center; flex-wrap: wrap; align-items: center; }
             .landscapes > a { color: white; overflow: hidden; }
             .landscapes > a > h3 { font-size: 360%; font-weight: 600; color: white; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 2em white; margin: 0; padding: 0.2em; position: relative; z-index: 1; }
-            .landscapes > a > h3 > small { display: block; font-weight: bold; }
+            .landscapes > a > h3 > small { display: block; font-weight: bold; margin-top: 10px; }
             .landscapes > a > img { position: absolute; top: 0; bottom: 0; z-index: 0; filter: brightness(50%); background-size: cover; background-position: center; }
             @media (max-width: 768px) {
                 .landscapes > a > h3 { font-size: 260%; }
@@ -90,6 +94,15 @@
         {% block scripts %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="/static/toolkit/toolkit.min.js"></script>
+        <script>
+            $("[data-reveal-after]").addClass("reveal")
+            $(document).on("click", "button[data-reveal-trigger]", function() {
+                var trigger = $(this).data("reveal-trigger")
+                $("[data-reveal-trigger="+trigger+"]").remove()
+                $("[data-reveal-after="+trigger+"]").addClass("revealed")
+                $.post("?" + trigger, function(data) {});
+            })
+        </script>
         {% endblock %}
     </body>
 </html>

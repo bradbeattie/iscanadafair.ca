@@ -39,62 +39,67 @@
                 <p><strong>The Gallagher Index measures how unfair <span class="nowrap">a voting system is</span>.</strong></p>
                 <p>It looks at how we voted.<br />It looks at how we're represented.<br />Then it says how different those two are.</p>
                 <p>A high Gallagher index means that some parties are getting more than their fair share of seats.</p>
+                <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. It measures fairness.</button>
             </div>
-            <p>In December 2016, Canada's <a href="https://www.ourcommons.ca/Committees/en/ERRE?parl=42&session=1">2016 Special Committee On Electoral Reform</a> made the following recommendation to parliament:</p>
-            <blockquote>
-                <p>
-                The Committee recommends that the Government should, as it develops
-                a new electoral system, use the Gallagher index in order to minimize the
-                level of distortion between the popular will of the electorate and the
-                resultant seat allocations in Parliament. <strong><span class="nowrap">The government should seek to design a system</span>
-                <span class="nowrap">that achieves a Gallagher score of 5 or less.</span></strong></p>
-                <footer>
-                    <a href="https://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408/">Recommendation #1 of Report 3: <cite>Strengthening Democracy in Canada: Principles, Process and Public Engagement for Electoral Reform</cite></a>
-                </footer>
-            </blockquote>
+            <div data-reveal-after="next">
+                <p>In December 2016, Canada's <a href="https://www.ourcommons.ca/Committees/en/ERRE?parl=42&session=1">2016 Special Committee On Electoral Reform</a> made the following recommendation to parliament:</p>
+                <blockquote>
+                    <p>
+                    The Committee recommends that the Government should, as it develops
+                    a new electoral system, use the Gallagher index in order to minimize the
+                    level of distortion between the popular will of the electorate and the
+                    resultant seat allocations in Parliament. <strong><span class="nowrap">The government should seek to design a system</span>
+                    <span class="nowrap">that achieves a Gallagher score of 5 or less.</span></strong></p>
+                    <footer>
+                        <a href="https://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408/">Recommendation #1 of Report 3: <cite>Strengthening Democracy in Canada: Principles, Process and Public Engagement for Electoral Reform</cite></a>
+                    </footer>
+                </blockquote>
+            </div>
         </div>
-        <div class="col-lg-6 text-center" v-if="selectedExample">
+        <div class="col-lg-6 text-center" data-reveal-after="next">
             <h2>How is it calculated?</h2>
-            <p><select v-model="selectedIndex" class="form-control"><option v-for="(example, index) in examples" :value="index">{{ example.title }}</option></select></p>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Votes</th>
-                        <th>Seats</th>
-                        <th>Vote %</th>
-                        <th>Seat %</th>
-                        <th><span class="hidden-xs">Difference</span><span class="visible-xs">Diff</span></th>
-                        <th>Squared</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="party in selectedExample.parties">
-                        <th :title="party.Longname">{{ party.Shortname.replace(/\./g, "") }}</th>
-                        <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
-                        <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
-                        <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
-                        <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" :style="{ fontWeight: party.seatPercentage > 50 ? 'bold' : 'normal' }" /></td>
-                        <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
-                        <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="6">Sum</th>
-                        <td class="cell-sum"><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
-                    </tr>
-                    <tr>
-                        <th colspan="6">Halved</th>
-                        <td class="cell-half"><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
-                    </tr>
-                    <tr>
-                        <th colspan="6">Square rooted</th>
-                        <td class="cell-squareroot"><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
-                    </tr>
-                </tfoot>
-            </table>
-            <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
+            <div v-if="selectedExample">
+                <p><select v-model="selectedIndex" class="form-control"><option v-for="(example, index) in examples" :value="index">{{ example.title }}</option></select></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Votes</th>
+                            <th>Seats</th>
+                            <th>Vote %</th>
+                            <th>Seat %</th>
+                            <th><span class="hidden-xs">Difference</span><span class="visible-xs">Diff</span></th>
+                            <th>Squared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="party in selectedExample.parties">
+                            <th :title="party.Longname">{{ party.Shortname.replace(/\./g, "") }}</th>
+                            <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
+                            <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
+                            <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
+                            <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" :style="{ fontWeight: party.seatPercentage > 50 ? 'bold' : 'normal' }" /></td>
+                            <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
+                            <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6">Sum</th>
+                            <td class="cell-sum"><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Halved</th>
+                            <td class="cell-half"><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Square rooted</th>
+                            <td class="cell-squareroot"><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
+            </div>
             <div class="jumbotron">
                 <p>So now when someone shows you this formula</p>
                 <p>

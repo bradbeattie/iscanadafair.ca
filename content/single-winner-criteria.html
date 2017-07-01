@@ -13,20 +13,27 @@
 {% block content %}
 {% raw %}
 <div id="app" class="container">
-    <h1>Single Winner Voting Systems</h1>
-    <div class="alert alert-info">
-        <a href="https://en.wikipedia.org/wiki/Gibbard%E2%80%93Satterthwaite_theorem">There is no perfect single-winner voting system</a>, and the hunt for one is like quicksand for the mind.
-        Instead, take a step back and reconsider why we even use single-winner system especially in the context of legislative assemblies where proportional representation would better address the core concern of unfair representation.
-        Investigating systems that result in a low <a href="/gallagher-index/">Gallagher Index</a> are likely a better use of your time.
-    </div>
+    <h1 class="text-center">Single Winner Voting Systems</h1>
     <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="jumbotron">
+                <p>
+                <strong>Disclaimer:</strong> <a href="https://en.wikipedia.org/wiki/Gibbard%E2%80%93Satterthwaite_theorem">There is no perfect single-winner voting system</a>, and the hunt for one is like a quicksand for the mind.
+                Instead, take a step back and reconsider why we even use single-winner system especially in the context of legislative assemblies where <a href="/proportional-representation/">proportional representation</a> would better address the core concern of unfair representation.
+                Investigating systems that result in a low <a href="/gallagher-index/">Gallagher Index</a> are likely a better use of your time.
+                </p>
+                <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. Single-winner systems all result in distorted parliaments.</button>
+            </div>
+        </div>
+    </div>
+    <div data-reveal-after="next" class="row">
         <div class="col-xs-4 text-center">
             <p class="help-block">Step 1. Click each button to get descriptions of different ways one can compare single-winner voting systems.</p>
             <p v-if="clicked" class="help-block">Step 2. Drag and drop the criteria above into the order you consider most important to least.</p>
             <draggable v-model="criteria" class="draggable-list">
                 <transition-group class="btn-group-vertical">
                     <div v-for="(criterion, index) in criteria" v-bind:key="criterion.name" class="btn btn-block btn-info" :class="selected === criterion.url ? 'active' : ''" v-on:click="changeIframe(criterion)">
-                        <span>{{ criterion.name }}</span>
+                        {{ criterion.name }}
                     </div>
                 </transition-group>
             </draggable>
