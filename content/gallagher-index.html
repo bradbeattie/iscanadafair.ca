@@ -13,6 +13,7 @@
     table { margin: 0 auto; }
     th, td { text-align: center; padding: 0.3em 0.2em; }
     td.hovered input { box-shadow: inset 0 0 1em rgba(0,0,0,0.5); }
+    tbody th { cursor: help; }
     tbody th, tfoot th { text-align: right; white-space: nowrap; padding-right: 0.5em; }
     p .form-control { display: inline-block; width: auto; }
     table .form-control { width: 5.5em; padding: 0; }
@@ -69,7 +70,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="party in selectedExample.parties">
-                        <th>{{ party.Shortname.replace(/\./g, "") }}</th>
+                        <th :title="party.Longname">{{ party.Shortname.replace(/\./g, "") }}</th>
                         <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
                         <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
                         <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
