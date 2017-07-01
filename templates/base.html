@@ -39,15 +39,12 @@
 
             /* Landscapes */
             .landscapes { display: flex; justify-content: center; flex-wrap: wrap; text-align: center; margin-bottom: 22px; }
-            .landscapes iframe, .landscapes > a > img { background: rgba(0,0,0,0.1); }
-            .landscapes > * { display: block; margin: 10px; max-width: 100%; }
-            .landscapes > * { box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); }
-            .landscapes > *, .landscapes > a, .landscapes > a > img { width: 560px; min-height: 315px; }
+            .landscapes > * { display: flex; position: relative; justify-content: center; flex-wrap: wrap; align-items: center; max-width: 100%; margin: 10px; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); }
+            .landscapes > *:only-child { margin: 0; }
+            .landscapes > *, .landscapes > a > img { width: 560px; min-height: 315px; }
             .landscapes > h2 { width: auto; min-height: auto; box-shadow: none; }
-            .landscapes > a + h2 { margin-top: 1em; }
-            .landscapes > a { border-radius: 6px; }
-            .landscapes > a, .landscapes > div { position: relative; display: flex; justify-content: center; flex-wrap: wrap; align-items: center; }
-            .landscapes > a { color: white; overflow: hidden; }
+            .landscapes > iframe, .landscapes > a > img { background: rgba(0,0,0,0.1); }
+            .landscapes > a { border-radius: 6px; color: white; overflow: hidden; }
             .landscapes > a > h3 { font-size: 360%; font-weight: 600; color: white; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 2em white; margin: 0; padding: 0.2em; position: relative; z-index: 1; }
             .landscapes > a > h3 > small { display: block; font-weight: bold; margin-top: 10px; }
             .landscapes > a > img { position: absolute; top: 0; bottom: 0; z-index: 0; filter: brightness(50%); background-size: cover; background-position: center; }
@@ -101,6 +98,11 @@
                 $("[data-reveal-trigger="+trigger+"]").remove()
                 $("[data-reveal-after="+trigger+"]").addClass("revealed")
                 $.post("?" + trigger, function(data) {});
+            })
+            $(document).on("click", "a", function () {
+                if (this.hostname && this.hostname !== window.location.hostname) {
+                    $(this).prop("target", "_blank")
+                }
             })
         </script>
         {% endblock %}
