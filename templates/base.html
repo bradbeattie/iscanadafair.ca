@@ -28,9 +28,10 @@
                 .nowrap { white-space: nowrap; }
             }
             .timeline h1, .timeline h2 { text-align: center; }
-            .timeline > .landscapes { margin-top: 60px; }
+            .timeline > .landscapes { margin-top: 60px; flex-wrap: wrap-reverse; }
             .jumbotron > *:first-child { margin-top: 0; }
             .jumbotron > *:last-child { margin-bottom: 0; }
+            img { max-width: 100%; }
             img.block { border-radius: 6px; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.1); width: 100%; display: block; }
             p + blockquote { margin-top: 22px; }
             .reveal { opacity: 0.3; filter: blur(5px) grayscale(50%); pointer-events: none; }
@@ -47,7 +48,7 @@
             .landscapes > a { border-radius: 6px; color: white; overflow: hidden; }
             .landscapes > a > h3 { font-size: 360%; font-weight: 600; color: white; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 2em white; margin: 0; padding: 0.2em; position: relative; z-index: 1; }
             .landscapes > a > h3 > small { display: block; font-weight: bold; margin-top: 10px; }
-            .landscapes > a > img { position: absolute; top: 0; bottom: 0; z-index: 0; filter: brightness(50%); background-size: cover; background-position: center; }
+            .landscapes > a > img { position: absolute; top: 0; bottom: 0; z-index: 0; filter: brightness(50%); background-size: cover; background-position: center; max-width: initial; }
             @media (max-width: 768px) {
                 .landscapes > a > h3 { font-size: 260%; }
             }
