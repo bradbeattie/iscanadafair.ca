@@ -1,0 +1,1 @@
+This directory is meant to contain pre-fetched datasets from the api.iscanadafair.ca database. Datasets should also strive to include scripts for reproduction.
