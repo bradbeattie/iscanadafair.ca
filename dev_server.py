@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from http.server import test, SimpleHTTPRequestHandler
 import os
 
