@@ -4,19 +4,21 @@ import os
 import shutil
 
 env = Environment(
-    loader=FileSystemLoader(["templates", "content"]),
+    loader=FileSystemLoader(["templates", "."]),
     autoescape=select_autoescape(['html', 'xml'])
 )
 
 FileSystemLoader("..")
-for filename in os.listdir("content"):
-    if not filename.endswith(".swp"):
-        with open(os.path.join("content", filename)) as f:
-            if f.readline().startswith("{% extends"):
-                with open(os.path.join("www", filename), "w") as f:
-                    f.write(env.get_template(filename).render())
-            else:
-                shutil.copyfile(
-                    os.path.join("content", filename),
-                    os.path.join("www", filename),
-                )
+for root, dirs, filenames in os.walk("content"):
+    for filename in filenames:
+        if not filename.endswith(".swp"):
+            sourcepath = os.path.join(root, filename)
+            targetpath = os.path.join("www", os.path.join(os.path.relpath(root, "content"), filename))
+            print(sourcepath, targetpath)
+            os.makedirs(os.path.dirname(targetpath), exist_ok=True)
+            with open(sourcepath) as f:
+                if f.readline().startswith("{% extends"):
+                    with open(targetpath, "w") as f:
+                        f.write(env.get_template(sourcepath).render())
+                else:
+                    shutil.copyfile(sourcepath, targetpath)
