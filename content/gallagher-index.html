@@ -10,19 +10,21 @@
     td .highlight { font-weight: bold; }
     input { font-family: monospace; text-align: center; }
     input[disabled] { background: rgba(0,0,0,0.05) !important; }
-    table { margin: 0 auto; }
-    th, td { text-align: center; padding: 0.3em 0.2em; }
-    td.hovered input { box-shadow: inset 0 0 1em rgba(0,0,0,0.5); }
-    tbody th { cursor: help; }
-    tbody th, tfoot th { text-align: right; white-space: nowrap; padding-right: 0.5em; }
+    #calculations table { margin: 0 auto; }
+    #calculations th, #calculations td { text-align: center; padding: 0.3em 0.2em; }
+    #calculations td.hovered input { box-shadow: inset 0 0 1em rgba(0,0,0,0.5); }
+    #calculations tbody th { cursor: help; }
+    #calculations tbody th, #calculations tfoot th { text-align: right; white-space: nowrap; padding-right: 0.5em; }
+    #calculations table .form-control { width: 5.5em; padding: 0; }
     p .form-control { display: inline-block; width: auto; }
-    table .form-control { width: 5.5em; padding: 0; }
     .form-control.wider { width: 7em; }
     @media (max-width: 767px) {
-        table, table .form-control { font-size: 85% }
-        table .form-control.wider { width: 5.5em; }
-        table .form-control { width: 4em; }
+        #calculations table .form-control { width: 5.5em; padding: 0; }
+        #calculations table, #calculations table .form-control { font-size: 85% }
+        #calculations table .form-control.wider { width: 5.5em; }
+        #calculations table .form-control { width: 4em; }
     }
+    #comparisons th, #comparisons td { text-align: center; }
 
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -33,93 +35,129 @@
 {% raw %}
 <div id="app" class="container">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-8 col-lg-offset-2">
             <h1 class="text-center">What is the Gallagher Index?</h1>
             <div class="jumbotron text-center">
                 <p><strong>The Gallagher Index measures how unfair <span class="nowrap">a voting system is</span>.</strong></p>
                 <p>It looks at how we voted.<br />It looks at how we're represented.<br />Then it says how different those two are.</p>
-                <p>A high Gallagher index means that some parties are getting more than their fair share of seats.</p>
+                <p>A high Gallagher index means that the voting system is distorting how people are represented in parliament.</p>
                 <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. It measures fairness.</button>
             </div>
-            <div data-reveal-after="next">
-                <p>In December 2016, Canada's <a href="https://www.ourcommons.ca/Committees/en/ERRE?parl=42&session=1">2016 Special Committee On Electoral Reform</a> made the following recommendation to parliament:</p>
-                <blockquote>
+        </div>
+    </div>
+    <div data-reveal-after="next">
+        <h2 class="text-center">How is it calculated?</h2>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-lg-6 text-center">
+                    <div v-if="selectedExample">
+                        <p><select v-model="selectedIndex" class="form-control"><option v-for="(example, index) in examples" :value="index">{{ example.title }}</option></select></p>
+                        <table id="calculations">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Votes</th>
+                                    <th>Seats</th>
+                                    <th>Vote %</th>
+                                    <th>Seat %</th>
+                                    <th><span class="hidden-xs">Difference</span><span class="visible-xs">Diff</span></th>
+                                    <th>Squared</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="party in selectedExample.parties">
+                                    <th :title="party.Longname">{{ party.Shortname.replace(/\./g, "") }}</th>
+                                    <td><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
+                                    <td><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
+                                    <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
+                                    <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" :style="{ fontWeight: party.seatPercentage > 50 ? 'bold' : 'normal' }" /></td>
+                                    <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
+                                    <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="6">Sum</th>
+                                    <td class="cell-sum"><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">Halved</th>
+                                    <td class="cell-half"><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6">Square rooted</th>
+                                    <td class="cell-squareroot"><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <p>So now when someone shows you this formula</p>
                     <p>
-                    The Committee recommends that the Government should, as it develops
-                    a new electoral system, use the Gallagher index in order to minimize the
-                    level of distortion between the popular will of the electorate and the
-                    resultant seat allocations in Parliament. <strong><span class="nowrap">The government should seek to design a system</span>
-                    <span class="nowrap">that achieves a Gallagher score of 5 or less.</span></strong></p>
-                    <footer>
-                        <a href="https://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408/">Recommendation #1 of Report 3: <cite>Strengthening Democracy in Canada: Principles, Process and Public Engagement for Electoral Reform</cite></a>
-                    </footer>
-                </blockquote>
+                        <img src="/static/images/gallagher-index.png" width="359" height="139" usemap="#gallagher-index-map" />
+                        <map name="gallagher-index-map">
+                            <!-- #$-:Image map file created by GIMP Image Map plug-in -->
+                            <!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+                            <!-- #$-:Please do not edit lines starting with "#$" -->
+                            <!-- #$VERSION:2.3 -->
+                            <!-- #$AUTHOR:Brad Beattie -->
+                            <area shape="poly" coords="0,59,21,59,21,0,359,1,359,8,35,7,34,139,21,139,0,85" title="Square rooted" id="map-squareroot" />
+                            <area shape="rect" coords="45,15,83,128" title="Halved" id="map-half" />
+                            <area shape="rect" coords="90,10,158,139" title="Summed" id="map-sum" />
+                            <area shape="rect" coords="174,47,219,95" title="Vote %" id="map-votes" />
+                            <area shape="rect" coords="273,47,320,95" title="Seat %" id="map-seats" />
+                            <area shape="rect" coords="227,47,267,95" title="Difference" id="map-difference" />
+                            <area shape="rect" coords="335,37,356,97" title="Squared" id="map-squared" />
+                        </map>
+                    </p>
+                    <p>you know it's just a way to calculate average fairness.</p>
+                    <iframe src="https://www.youtube-nocookie.com/embed/OCB3cH28MfQ?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
-        <div class="col-lg-6 text-center" data-reveal-after="next">
-            <h2>How is it calculated?</h2>
-            <div v-if="selectedExample">
-                <p><select v-model="selectedIndex" class="form-control"><option v-for="(example, index) in examples" :value="index">{{ example.title }}</option></select></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Votes</th>
-                            <th>Seats</th>
-                            <th>Vote %</th>
-                            <th>Seat %</th>
-                            <th><span class="hidden-xs">Difference</span><span class="visible-xs">Diff</span></th>
-                            <th>Squared</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="party in selectedExample.parties">
-                            <th :title="party.Longname">{{ party.Shortname.replace(/\./g, "") }}</th>
-                            <td class="cell-votes"><input type="number" min="0" step="1" v-model.number="party.Votes" class="form-control wider" /></td>
-                            <td class="cell-seats"><input type="number" min="0" step="1" v-model.number="party.Seats" class="form-control" /></td>
-                            <td class="cell-votes"><input type="text" disabled :value="per(party.votePercentage)" class="form-control" :style="{ fontWeight: party.votePercentage > 50 ? 'bold' : 'normal' }" /></td>
-                            <td class="cell-seats"><input type="text" disabled :value="per(party.seatPercentage)" class="form-control" :style="{ fontWeight: party.seatPercentage > 50 ? 'bold' : 'normal' }" /></td>
-                            <td class="cell-difference"><input type="text" disabled :value="per(party.difference)" class="form-control" :class="Math.abs(party.difference) > 3.17 ? 'highlight' : ''" /><!-- I obtained 3.17 by reversing a Gallagher Index of 5 to show how what average difference that might imply --></td>
-                            <td class="cell-squared"><input type="text" disabled :value="per(Math.pow(party.difference, 2))" class="form-control" /></td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="6">Sum</th>
-                            <td class="cell-sum"><input type="text" disabled :value="per(diffSquaredSum)" class="form-control" /></td>
-                        </tr>
-                        <tr>
-                            <th colspan="6">Halved</th>
-                            <td class="cell-half"><input type="text" disabled :value="per(diffSquaredSum / 2)" class="form-control" /></td>
-                        </tr>
-                        <tr>
-                            <th colspan="6">Square rooted</th>
-                            <td class="cell-squareroot"><input type="text" disabled :value="per(Math.pow(diffSquaredSum / 2, 0.5))" class="form-control" /></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <h3>Resulting Gallagher Index<br/><span class="highlight">&mdash; {{ Math.round(gallagherIndex) }}% &mdash;</span></h3>
-            </div>
-            <div class="jumbotron">
-                <p>So now when someone shows you this formula</p>
-                <p>
-                    <img src="/static/images/gallagher-index.png" width="359" height="139" usemap="#gallagher-index-map" />
-                    <map name="gallagher-index-map">
-                        <!-- #$-:Image map file created by GIMP Image Map plug-in -->
-                        <!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
-                        <!-- #$-:Please do not edit lines starting with "#$" -->
-                        <!-- #$VERSION:2.3 -->
-                        <!-- #$AUTHOR:Brad Beattie -->
-                        <area shape="poly" coords="0,59,21,59,21,0,359,1,359,8,35,7,34,139,21,139,0,85" title="Square rooted" id="map-squareroot" />
-                        <area shape="rect" coords="45,15,83,128" title="Halved" id="map-half" />
-                        <area shape="rect" coords="90,10,158,139" title="Summed" id="map-sum" />
-                        <area shape="rect" coords="174,47,219,95" title="Vote %" id="map-votes" />
-                        <area shape="rect" coords="273,47,320,95" title="Seat %" id="map-seats" />
-                        <area shape="rect" coords="227,47,267,95" title="Difference" id="map-difference" />
-                        <area shape="rect" coords="335,37,356,97" title="Squared" id="map-squared" />
-                    </map>
-                </p>
-                <p>you know it's just a way to calculate average fairness.</p>
+        <h2 class="text-center">2016's discussion of the Gallagher Index</h2>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>In December 2016, Canada's <a href="https://www.ourcommons.ca/Committees/en/ERRE?parl=42&session=1">2016 Special Committee On Electoral Reform</a> made the following recommendation to parliament:</p>
+                    <blockquote>
+                        <p>
+                            The Committee recommends that the Government should, as it develops
+                            a new electoral system, use the Gallagher index in order to minimize the
+                            level of distortion between the popular will of the electorate and the
+                            resultant seat allocations in Parliament. <strong><span class="nowrap">The government should seek to design a system</span>
+                            <span class="nowrap">that achieves a Gallagher score of 5 or less.</span></strong>
+                        </p>
+                        <footer>
+                            <a href="https://www.ourcommons.ca/DocumentViewer/en/42-1/ERRE/report-3/page-408/">Recommendation #1 of Report 3: <cite>Strengthening Democracy in Canada: Principles, Process and Public Engagement for Electoral Reform</cite></a>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="col-md-6">
+                    <table id="comparisons" class="table table-bordered table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th>Gallagher Index</th>
+                                <th>Voting system</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><a href="http://election-modelling.ca/av/index.html">Alternative Vote</a></td><td class="danger">19.0%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/fptp/index.html">First-Past-The-Post</a></td><td class="danger">12.0%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/av-plus/index.html">AV+</a></td><td class="danger">13.4%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/mmp-15pct/index.html">Mixed Member Proportional (Lite)</a></td><td class="warning">9.0%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/mmp-8-fptp/index.html">Mixed Member Proportional (Small Regions)</a></td><td class="success">3.8%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/rup-15pct/index.html">Rural-Urban PR (More Singles, 389 Seats)</a></td><td class="success">1.9%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/rup-stv/index.html">Rural-Urban PR (Few Singles)</a></td><td class="success">2.4%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/ru_multiples_rc2/index.html">Riding Centric Rural-Urban PR</a></td><td class="success">1.5%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/rup-338/index.html">Rural-Urban PR (More Singles, 338 Seats)</a></td><td class="success">2.7%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/stv_med/index.html">Single Transferable Vote (Medium-sized Regions)</a></td><td class="success">3.3%</td></tr>
+                            <tr><td><a href="http://election-modelling.ca/stv_small/index.html">Single Transferable Vote (Small Regions)</a></td><td class="warning">5.6%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
