@@ -4,3 +4,4 @@
 .htaccess
 Python-3.*
 www/*.html
+www/*/*.html

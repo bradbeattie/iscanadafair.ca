@@ -14,7 +14,6 @@ for root, dirs, filenames in os.walk("content"):
         if not filename.endswith(".swp"):
             sourcepath = os.path.join(root, filename)
             targetpath = os.path.join("www", os.path.join(os.path.relpath(root, "content"), filename))
-            print(sourcepath, targetpath)
             os.makedirs(os.path.dirname(targetpath), exist_ok=True)
             with open(sourcepath) as f:
                 if f.readline().startswith("{% extends"):
