@@ -5,7 +5,8 @@ import shutil
 
 env = Environment(
     loader=FileSystemLoader(["templates", "."]),
-    autoescape=select_autoescape(['html', 'xml'])
+    autoescape=select_autoescape(['html', 'xml']),
+    extensions=["jinja2_markdown.MarkdownExtension"],
 )
 
 FileSystemLoader("..")
