@@ -3,16 +3,17 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import os
 import shutil
 
+EXTENSIONS = ("html", )
 env = Environment(
     loader=FileSystemLoader(["templates", "."]),
-    autoescape=select_autoescape(['html', 'xml']),
+    autoescape=select_autoescape(EXTENSIONS),
     extensions=["jinja2_markdown.MarkdownExtension"],
 )
 
 FileSystemLoader("..")
 for root, dirs, filenames in os.walk("content"):
     for filename in filenames:
-        if not filename.endswith(".swp"):
+        if filename.endswith(EXTENSIONS):
             sourcepath = os.path.join(root, filename)
             targetpath = os.path.join("www", os.path.join(os.path.relpath(root, "content"), filename))
             os.makedirs(os.path.dirname(targetpath), exist_ok=True)
