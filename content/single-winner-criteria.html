@@ -18,29 +18,34 @@
         <div class="col-lg-8 col-lg-offset-2">
             <div class="jumbotron">
                 <p>
-                <strong>Disclaimer:</strong> <a href="https://en.wikipedia.org/wiki/Gibbard%E2%80%93Satterthwaite_theorem">There is no perfect single-winner voting system</a>, and the hunt for one is like a quicksand for the mind.
-                Instead, take a step back and reconsider why we even use single-winner system especially in the context of legislative assemblies where <a href="/proportional-representation/">proportional representation</a> would better address the core concern of unfair representation.
-                Investigating systems that result in a low <a href="/gallagher-index/">Gallagher Index</a> are likely a better use of your time.
+                    <strong>Disclaimer:</strong> <a href="https://en.wikipedia.org/wiki/Gibbard%E2%80%93Satterthwaite_theorem">There is no perfect single-winner voting system</a>, and the hunt for one is like a quicksand for the mind.
+                    Instead, take a step back and reconsider why we even use single-winner system especially in the context of legislative assemblies where <a href="/proportional-representation/">proportional representation</a> would better address the core concern of unfair representation.
+                    Investigating systems that result in a low <a href="/gallagher-index/">Gallagher Index</a> are likely a better use of your time.
                 </p>
                 <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. Single-winner systems all result in distorted parliaments.</button>
             </div>
         </div>
     </div>
-    <div data-reveal-after="next" class="row">
+    <div class="row" data-reveal-after="next">
         <div class="col-xs-4 text-center">
             <p class="help-block">Step 1. Click each button to get descriptions of different ways one can compare single-winner voting systems.</p>
-            <p v-if="clicked" class="help-block">Step 2. Drag and drop the criteria above into the order you consider most important to least.</p>
             <draggable v-model="criteria" class="draggable-list">
                 <transition-group class="btn-group-vertical">
-                    <div v-for="(criterion, index) in criteria" v-bind:key="criterion.name" class="btn btn-block btn-info" :class="selected === criterion.url ? 'active' : ''" v-on:click="changeIframe(criterion)">
+                    <div v-for="(criterion, index) in criteria" v-bind:key="criterion.name" class="btn btn-block" :class="{
+                        'btn-success': selected && selected.compliance[criterion.order] === 5,
+                        'btn-warning': selected && 1 < selected.compliance[criterion.order] && selected.compliance[criterion.order] < 5,
+                        'btn-danger': selected && selected.compliance[criterion.order] === 1,
+                        'btn-info': !selected,
+                        'active': displayed === criterion.url
+                    }" v-on:click="changeIframe(criterion)">
                         {{ criterion.name }}
                     </div>
                 </transition-group>
             </draggable>
-            <p><button class="btn btn-success btn-block" v-on:click="showMatch">Step 3. When ready, click to show which voting system best satisfies the criteria as ordered above</button></p>
+            <p class="help-block">Step 2. Drag and drop the criteria above into the order you consider most important to least.</p>
         </div>
-        <div v-if="selected" class="col-xs-8">
-            <iframe class="panel panel-default" style="height: 800px" :src="selected"></iframe>
+        <div v-if="displayed" class="col-xs-8">
+            <iframe class="panel panel-default" style="height: 800px" :src="displayed"></iframe>
         </div>
     </div>
 </div>
@@ -517,15 +522,14 @@ $("#imported-from-wikipedia tbody tr").each(function(i, tr) {
 var vm = new Vue({
     el: '#app',
     data: {
-        selected: "https://en.m.wikipedia.org/wiki/Comparison_of_electoral_systems",
         systems: systems,
         criteria: criteria,
-        clicked: false
+        selected: null,
+        displayed: "https://en.m.wikipedia.org/wiki/Comparison_of_electoral_systems"
     },
     methods: {
         changeIframe (criterion) {
-            this.selected = criterion.url
-            this.clicked = true
+            this.displayed = criterion.url
         },
         showMatch () {
             var viable = this.systems.slice()
@@ -533,6 +537,7 @@ var vm = new Vue({
                 var best_compliance = Math.max.apply(Math, viable.map(function(system) {
                     return system.compliance[criterion.order]
                 }))
+                console.log(criterion.name, best_compliance)
                 new_viable = viable.filter(function(system) {
                     return system.compliance[criterion.order] === best_compliance
                 })
@@ -540,7 +545,15 @@ var vm = new Vue({
                     viable = new_viable
                 }
             })
-            this.selected = viable[Math.floor(Math.random() * viable.length)].url
+            this.selected = viable[Math.floor(Math.random() * viable.length)]
+            console.log(this.selected)
+            this.displayed = this.selected.url
+        }
+    },
+    watch: {
+        criteria: {
+            handler () { this.showMatch() },
+            deep: true
         }
     }
 })
