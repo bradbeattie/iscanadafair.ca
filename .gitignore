@@ -3,5 +3,6 @@
 .env*
 .htaccess
 Python-3.*
+hillcam*.jpg
 www/*.html
 www/*/*.html
