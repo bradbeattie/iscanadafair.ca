@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from http.server import test, SimpleHTTPRequestHandler
+from http.server import test as run_dev_server, SimpleHTTPRequestHandler
 import os
 
 class SuffixHandler(SimpleHTTPRequestHandler):
@@ -9,4 +9,4 @@ class SuffixHandler(SimpleHTTPRequestHandler):
             self.path = f"{self.path.rstrip('/')}.html"
         super().do_GET()
 
-test(HandlerClass=SuffixHandler)
+run_dev_server(HandlerClass=SuffixHandler)
