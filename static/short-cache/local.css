@@ -16,6 +16,7 @@ p + blockquote { margin-top: 22px; }
 .jumbotron ul, .jumbotron ol { font-size: 21px; font-weight: 200; margin-bottom: 15px; }
 .no-margin { margin: 0; }
 .reveal { opacity: 0.3; filter: blur(7px) grayscale(50%); pointer-events: none; }
+.navbar-brand.pull-right { font-size: 14px; color: rgba(255,255,255,.8); line-height: 24px; }
 .reveal.revealed { opacity: 1; filter: none;  pointer-events: initial; }
 .timeline > .landscapes { margin-top: 60px; flex-wrap: wrap-reverse; }
 .timeline h1, .timeline h2 { text-align: center; }
