@@ -11,21 +11,23 @@
 {% endblock %}
 
 {% block content %}
-{% raw %}
-<div id="app" class="container">
-    <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
-            <div class="jumbotron text-center">
+<div class="jumbotron text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
                 <h1>Comparing Single Winner Voting Systems</h1>
                 <p>
                     <strong>Disclaimer:</strong> <a href="https://en.wikipedia.org/wiki/Gibbard%E2%80%93Satterthwaite_theorem">There is no perfect single-winner voting system</a>, and the hunt for one is like a quicksand for the mind.
                     Instead, take a step back and reconsider why we even use single-winner system especially in the context of legislative assemblies where <a href="/proportional-representation/">proportional representation</a> would better address the core concern of unfair representation.
                     Investigating systems that result in a low <a href="/gallagher-index/">Gallagher Index</a> are likely a better use of your time.
                 </p>
-                <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. Single-winner systems all result in distorted parliaments.</button>
+                <button class="btn btn-lg btn-primary" data-reveal-trigger="next">Understood. Single-winner systems all result in distorted parliaments.</button>
             </div>
         </div>
     </div>
+</div>
+{% raw %}
+<div id="app" class="container">
     <div class="row" data-reveal-after="next">
         <div class="col-xs-4 text-center">
             <p class="help-block">Step 1. Click each button to get descriptions of different ways one can compare single-winner voting systems.</p>

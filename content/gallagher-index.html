@@ -33,19 +33,21 @@
 </style>
 {% endblock %}
 {% block content %}
-{% raw %}
-<div id="app" class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
-            <div class="jumbotron text-center">
+<div class="jumbotron text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
                 <h1>What is the Gallagher Index?</h1>
                 <p><strong>The Gallagher Index measures how unfair <span class="nowrap">a voting system is</span>.</strong></p>
                 <p>It looks at how we voted.<br />It looks at how we're represented.<br />Then it says how different those two are.</p>
-                <p>A high Gallagher index means that the voting system is distorting how people are represented in parliament.</p>
-                <button class="btn btn-block btn-lg btn-primary" data-reveal-trigger="next">Understood. It measures fairness.</button>
+                <p>A high Gallagher index means that parliament doesn't reflect how people voted.</p>
+                <button class="btn btn-lg btn-primary" data-reveal-trigger="next">Understood. It measures fairness.</button>
             </div>
         </div>
     </div>
+</div>
+{% raw %}
+<div id="app" class="container">
     <div data-reveal-after="next">
         <h2 class="text-center">How is it calculated?</h2>
         <div class="jumbotron">
