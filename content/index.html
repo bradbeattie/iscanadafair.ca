@@ -1,62 +1,67 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container text-center">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="jumbotron">
-                <h1>Is Canada Fair?</h1>
-                <p><span class="nowrap">Does it matter that you can vote?</span><br /><span class="nowrap">Even if you're not equally represented?</span></p>
-                <iframe src="https://www.youtube-nocookie.com/embed/r9rGX91rq5I?rel=0&showinfo=0&start=0&end=291" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="landscapes">
-                <a href="/2015/">
-                    <h3>Canadian Federal Electoral Reform</h3>
-                    <img src="/static/images/timeline-2017.jpg" />
-                </a>
-                <a href="/data-visualization/">
-                    <h3>Data Visualization and Open Data</h3>
-                    <img src="/static/short-cache/hillcam-560x315.jpg" />
-                </a>
-                <a href="/recent-parliamentary-business/">
-                    <h3>Recent Parliamentary Business</h3>
-                    <img src="/static/images/house-of-commons.jpg" />
-                </a>
-                <a href="/get-involved/">
-                    <h3>Get Involved</h3>
-                    <img src="/static/images/rally.jpg" />
-                </a>
-                <a href="/1215-1297/">
-                    <h3>Looking Further Back in History<small>The Magna Carta</small></h3>
-                    <img src="/static/images/timeline-1215.jpg" />
-                </a>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="landscapes">
-                <a href="/proportional-representation/">
-                    <h3>Proportional Representation</h3>
-                    <img src="/static/images/proportional-representation.png" />
-                </a>
-                <a href="/gallagher-index/">
-                    <h3>The Gallagher Index</h3>
-                    <img src="/static/images/gallagher-monsef.jpg" />
-                </a>
-                <a href="/gerrymandering/">
-                    <h3>Gerrymandering</h3>
-                    <img src="/static/images/gerrymandering-example.jpg" />
-                </a>
-                <a href="/single-winner-criteria/">
-                    <h3>Comparing Single Winner Voting Systems</h3>
-                    <img src="/static/images/single-riding-example.jpg" />
-                </a>
-                <a href="/cgp-grey/">
-                    <h3>CGP Grey's<br />Politics in the Animal Kingdom</h3>
-                    <img src="/static/images/cgp-grey.jpg" />
-                </a>
-            </div>
+{% extends "blank.html" %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/reveal/reveal.min.css">
+    <link rel="stylesheet" href="/static/short-cache/reveal-theme.css">
+    <style>
+        #background {
+            background-image: url(/static/images/parliament-blurred.jpg);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            opacity: 0.2;
+        }
+        .reveal p { margin: 40px 0; }
+        .reveal li { margin-bottom: 20px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id="background"></div>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <p>In 1867, many Canadians were denied the vote.</p>
+                <p class="fragment">Without a vote, they were denied representation.</p>
+            </section>
+            <section>
+                <ul>
+                    <li>1918: Sex requirements were abolished</li>
+                    <li class="fragment">1948: Wealth requirements were abolished</li>
+                    <li class="fragment">1960: Race requirements were abolished</li>
+                </ul>
+                <p class="fragment">Yet most Canadians are still denied representation.</p>
+            </section>
+            <section>
+                <ul>
+                    <li>2006: Liberals and New Democrats in Alberta:<br />27% of the vote, no seats</li>
+                    <li>2006: Liberals and New Democrats in Alberta:<br />27% of the vote, no seats</li>
+                    <li class="fragment">2011: Liberals and Greens in the Territories:<br />35% of the vote, no seats</li>
+                    <li class="fragment">2015: Conservatives and New Democrats in Atlantic Canada: 37% of the vote, no seats</li>
+                </ul>
+            </section>
+            <section>
+                <p>For the past 30 years, most winning parties hover around 40% of the vote and 56% of the seats.</p>
+                <p class="fragment">This disproportionality means that<br />some votes just don't matter.</p>
+                <p class="fragment"><a href="/proportional-representation/">Proportional representation fixes this problem.</a></p>
+            </section>
         </div>
     </div>
-</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/reveal/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            overview: false,
+            help: false,
+            transition: 'convex',
+        })
+        $(document).on("click", "a", function () {
+            if (this.hostname && this.hostname !== window.location.hostname) {
+                $(this).prop("target", "_blank")
+            }
+        })
+    </script>
 {% endblock %}
