@@ -18,6 +18,7 @@ p + blockquote { margin-top: 22px; }
 .reveal { opacity: 0.3; filter: blur(7px) grayscale(50%); pointer-events: none; }
 .navbar-brand.pull-right { font-size: 14px; color: rgba(255,255,255,.8); line-height: 24px; }
 .reveal.revealed { opacity: 1; filter: none;  pointer-events: initial; }
+.timeline h1 { font-size: 36px; }
 .timeline > .landscapes { margin-top: 60px; flex-wrap: wrap-reverse; }
 .timeline h1, .timeline h2 { text-align: center; }
 .timeline h1, .container > h1 { margin-top: 40px; }
@@ -43,7 +44,8 @@ p + blockquote { margin-top: 22px; }
 
 
 /* Theme */
-h1, h2 { font-size: 36px; }
+h1 { font-size: 40px; }
+h2 { font-size: 36px; }
 body { background: #eee; }
 .navbar-inverse { background: hsla(0,0%,20%,0.97); }
 blockquote { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.05); border-radius: 6px; }

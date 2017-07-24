@@ -14,6 +14,7 @@
             left: 0; right: 0; top: 0; bottom: 0;
             opacity: 0.2;
         }
+        #skip-presentation { position: absolute; top: 1em; right: 1em; font-size: 50%; opacity: 0.5; }
         .reveal p { margin: 40px 0; }
         .reveal li { margin-bottom: 20px; }
         .reveal .progress { height: 10px; }
@@ -60,6 +61,14 @@
             help: false,
             transition: 'convex',
         })
+        Reveal.addEventListener( 'fragmentshown', function( event ) {
+            if (event.fragment == $(".fragment").last().get(0)) {
+                localStorage["index-presentation-complete"] = 1
+            }
+        });
+        if (localStorage["index-presentation-complete"] == 1) {
+            $(".reveal").append("<a id='skip-presentation' href='/contents/'>Skip presentation &raquo;</a>")
+        }
         $(document).on("click", "a", function () {
             if (this.hostname && this.hostname !== window.location.hostname) {
                 $(this).prop("target", "_blank")

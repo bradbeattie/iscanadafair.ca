@@ -1,0 +1,4 @@
+body { padding: 0; }
+#notebook { padding: 0 !important; }
+#notebook-container { padding: 0; box-shadow: none; }
+.container { width: 100% !important; max-width: 1170px; }
