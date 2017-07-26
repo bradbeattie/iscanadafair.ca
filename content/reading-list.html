@@ -2,11 +2,12 @@
 {% block head %}
     {{ super() }}
     <style>
-        .row img { box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.2); border-radius: 6px; max-height: 400px; }
+        #books a { display: inline-block; display: inline-block; margin: 0 1em 2em; }
+        #books img { display: inline-block; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.2); border-radius: 6px; height: 400px;  }
     </style>
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container text-center">
         <h1>Reading List</h1>
 
         <div class="landscapes">
@@ -20,53 +21,26 @@
             </a>
         </div>
 
-        <h2>Collective Decisions and Voting: The Potential for Public Choice<br /><small>Nicolaus Tideman</small></h2>
-        <div class="row">
-            <div class="col-md-9">
-                <blockquote>
-                    <p>When one thinks about how collective decisions are made, voting is the method that comes naturally to mind. But other methods such as random process and consensus are also used. This book explores just what a collective decision is, classifies the methods of making collective decisions, and identifies the advantages and disadvantages of each method. Classification is the prelude to evaluation. What are the characteristics of a method of making collective decisions, the book asks, that permit us to describe a collective decision as good? The second part of the book is detailed exploration of voting: the dimensions in which voting situations differ, the origins and logic of majority rule, the frequency of cycles in voting, the Arrow and Gibbard-Satterthwaite theorems, criteria for ways of cutting through cycles and the application of these criteria to a variety of rules, voting over continuums, proportional representation, and voting rules that take account of intensities of preferences. Relatively unknown methods of voting give voting a much greater potential than is generally recognized. Collective Decisions and Voting is essential reading for everyone with an interest in voting theory and in how public choices might be made.</p>
-                </blockquote>
-                <!--
-                    Great first half on the nature of collective decisions.
-                    Second half does a fine service to single-winner election methods.
-                    Book doesn't touch on proportional assemblies.
-                -->
-            </div>
-            <div class="col-md-3">
-                <img src="/static/images/book-covers/tideman-collective.jpg" />
-            </div>
-        </div>
-
-        <h2>Tragedy in the Commons: Former Members of Parliament Speak Out About Canada's Failing Democracy<br /><small>Alison Loat and Michael MacMillan</small></h2>
-        <div class="row">
-            <div class="col-md-9">
-                <blockquote>
-                    <p>The founders of influential think tank Samara ask former members of Parliament what has gone wrong with our democracy, and how it can be fixed.</p>
-                    <p>Talk to any Canadian about politics and you'll hear little but frustration and bewilderment. Canadians don't see their politicians working for them; all they see is grandstanding in the House of Commons and MPs pursuing their own agendas. These same MPs make critical choices about how we live together and how our country will function in the future. But even with so much at stake, citizens are increasingly apathetic about traditional politics. How did one of the world's most functional democracies go so wrong?</p>
-                    <p>In Tragedy in the Commons, Samara founders Alison Loat and Michael MacMillan provide an unprecedented look behind the curtain of Canadian politics. Based on their exit interviews with 80 retired MPs, they share surprising observations about the practice of politics in Canada: the accidental arrival of many in political life; the conflicting demands of the MPs' jobs; and the role of the political party in an MP's life.</p>
-                    <p>In this timely and controversial book, Loat and MacMillan reveal the challenges facing Canadian democracy today. Using the MPs' own voices, confused and contradictory as they sometimes are, Loat and MacMillan outline concrete steps to improve our politics--from the inside out.</p>
-                </blockquote>
-            </div>
-            <div class="col-md-3">
-                <img src="/static/images/book-covers/loat-macmillan-tragedy.jpg" />
-            </div>
-        </div>
-
-        <h2>Elections<br /><small>John C. Courtney</small></h2>
-        <div class="row">
-            <div class="col-md-9">
-                <blockquote>
-                    <p>Open and competitive elections governed by widely accepted rules and procedures are essential to the legitimacy of any political system. Elections assesses the history and development of five building blocks of the Canadian electoral regime: the franchise, electoral districts, voter registration, election machinery, and plurality voting. Arguing that on balance the Canadian electoral system is truly democratic, John Courtney demonstrates its vast improvements over the years. The right to vote is now generously interpreted. The process of redrawing electoral districts is no longer in the hands of elected officials. Voter registration lists include all but a small share of eligible voters. And those who manage and supervise elections on behalf of all citizens are honest and trustworthy officials. Using the recent push for reform of the plurality vote system as one example, Courtney also examines why certain electoral institutions have been amenable to change and others have not.</p>
-                </blockquote>
-                <!--
-                    Thorough covering of Canadian-specific elections info.
-                    Draws a false divide between universal suffrage, gerrymandering and proportionality.
-                -->
-            </div>
-            <div class="col-md-3">
-                <img src="/static/images/book-covers/courtney-elections.jpg" />
-            </div>
-        </div>
-            
+        <p id="books">
+            <a href="https://www.google.com/search?q=Collective Decisions and Voting: The Potential for Public Choice, Nicolaus Tideman"><img src="/static/images/book-covers/tideman-collective.jpg" /></a>
+            <a href="https://www.google.com/search?q=Tragedy in the Commons: Former Members of Parliament Speak Out About Canada's Failing Democracy, Alison Loat and Michael MacMillan"><img src="/static/images/book-covers/loat-macmillan-tragedy.jpg" /></a>
+            <a href="https://www.google.com/search?q=Elections, John C. Courtney"><img src="/static/images/book-covers/courtney-elections.jpg" /></a>
+            <a href="https://www.google.com/search?q=Irresponsible Government, Brent Rathgeber"><img src="/static/images/book-covers/rathgeber-irresponsible.jpg" /></a>
+            <!--
+            I'll add these as I read them
+            <a href="https://www.google.com/search?q=Auditing Canadian Democracy, William Cross"><img src=""></a>
+            <a href="https://www.google.com/search?q=Advocacy Groups, Lisa Young and Joanna Everitt"><img src=""></a>
+            <a href="https://www.google.com/search?q=Shopping for Votes: How Politicians Choose Us and We Choose Them, Susan Delacourt"><img src=""></a>
+            <a href="https://www.google.com/search?q=The Canadian Regime: An Introduction to Parliamentary Government in Canada, Malcomson, Myers, Baler, Bateman"><img src=""></a>
+            <a href="https://www.google.com/search?q=The Canadian Federal Election of 2015, Jon H. Pammett and Christopher Dornan"><img src=""></a>
+            <a href="https://www.google.com/search?q=Canada 1911: The Decisive Election that Shaped the Country, David MacKenzie and Patrice Dutil"><img src=""></a>
+            <a href="https://www.google.com/search?q=Whose Vote Counts?, Robert Richie and Steven Hill"><img src=""></a>
+            <a href="https://www.google.com/search?q=Turning Parliament Inside Out: Practical Ideas for Reforming Canada's Democracy, Stewart, Chong, Simms"><img src=""></a>
+            <a href="https://www.google.com/search?q=Voting Behaviour in Canada, Cameron D. Anderson and Laura B. Stephenson"><img src=""></a>
+            <a href="https://www.google.com/search?q=Parties, Elections, and the Future of Canadian Politics, Amanda Bittner and Royce Koop"><img src=""></a>
+            <a href="https://www.google.com/search?q=Dominance and Decline: Making Sense of Recent Canadian Elections, Gidengil, Nevitte, Blais, Everitt, Fournier"><img src=""></a>
+            <a href="https://www.google.com/search?q=Reforming Parliamentary Democracy, Leslie Seidle"><img src=""></a>
+            -->
+        </p>
     </div>
 {% endblock %}
