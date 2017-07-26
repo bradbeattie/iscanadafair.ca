@@ -4,12 +4,12 @@
 
 {% block head %}
     {{ super() }}
-    <style>p + p { margin-top: 3em; }</style>
+    <style>p { margin-bottom: 3em; }</style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-center">Mount Doom after the 2015 election</h1>
+<div class="container text-center">
+    <h1>Mount Doom after the 2015 election</h1>
     <p><img class="block" src="/static/images/mount-doom/01.jpg" /></p>
     <p><img class="block" src="/static/images/mount-doom/02.jpg" /></p>
     <p><img class="block" src="/static/images/mount-doom/03.jpg" /></p>
@@ -33,5 +33,6 @@
     <p><img class="block" src="/static/images/mount-doom/21.jpg" /></p>
     <p><img class="block" src="/static/images/mount-doom/22.jpg" /></p>
     <p><img class="block" src="/static/images/mount-doom/23.jpg" /></p>
+    <p><a class="btn btn-info btn-lg" href="/2015/">Read up on Canada's 42nd General Election of 2015</a></p>
 </div>
 {% endblock %}
