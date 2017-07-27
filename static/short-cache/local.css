@@ -36,10 +36,10 @@ p + blockquote { margin-top: 22px; }
 .landscapes > *, .landscapes > a > img { width: 560px; min-height: 315px; }
 .landscapes > h2 { width: auto; min-height: auto; box-shadow: none; }
 .landscapes > iframe, .landscapes > a > img { background: rgba(0,0,0,0.1); }
-.landscapes > a { border-radius: 6px; color: white; overflow: hidden; }
-.landscapes > a > h3 { font-size: 320%; color: white; font-family: "Open Sans"; font-weight: 700; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 3em white; margin: 0; padding: 0.35em; position: absolute; z-index: 1; }
+.landscapes > a { border-radius: 6px; color: white; background: black; overflow: hidden; }
+.landscapes > a > h3 { font-size: 320%; color: white; font-family: "Open Sans"; font-weight: 700; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 3em white; margin: 0; padding: 0.35em; position: relative; z-index: 1; }
 .landscapes > a > h3 > small { display: block; margin-top: 10px; font-weight: 700; line-height: 1.2; }
-.landscapes > a > img { filter: brightness(50%); background-size: cover; background-position: center; max-width: initial; }
+.landscapes > a > img { opacity: 0.5; position: absolute; top: 0; left: 0; right: 0; bottom: 0; object-fit: cover; }
 @media (max-width: 768px) { .landscapes > a > h3 { font-size: 200%; } }
 
 
