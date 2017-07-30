@@ -39,8 +39,7 @@ p + blockquote { margin-top: 22px; }
 .landscapes > a { border-radius: 6px; color: white; background: black; overflow: hidden; }
 .landscapes > a > h3 { font-size: 320%; color: white; font-family: "Open Sans"; font-weight: 700; text-shadow: 0 0.05em 0.05em rgba(0,0,0,0.5), 0 0 3em white; margin: 0; padding: 0.35em; position: relative; z-index: 1; }
 .landscapes > a > h3 > small { display: block; margin-top: 10px; font-weight: 700; line-height: 1.2; }
-.landscapes > a > img { opacity: 0.5; position: absolute; top: 0; left: 0; right: 0; bottom: 0; object-fit: cover; }
-@media (max-width: 768px) { .landscapes > a > h3 { font-size: 200%; } }
+.landscapes > a > img { opacity: 0.5; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
 
 
 /* Theme */
@@ -51,6 +50,13 @@ body { background: #eee; }
 blockquote { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.05); border-radius: 6px; }
 h1, h2, h3 { font-family: Cinzel, sans-serif; font-weight: normal; }
 .navbar-inverse { border: none; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.2); }
+@media (max-width: 768px) {
+  h1 { font-size: 32px; }
+  h2 { font-size: 26px; }
+  .landscapes > a > h3 { font-size: 200%; }
+  .landscapes > *, .landscapes > a > img { min-height: 150px; }
+  .jumbotron p { font-size: 16px; }
+}
 
 
 /* Bootstrap overrides */
