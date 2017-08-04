@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Book Club &ndash; {{ super() }}{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <style>
+        #books > div > a { float: left; }
+        #books a { display: inline-block; margin: 0 1em 2em; }
+        #books img { display: inline-block; box-shadow: 0 0.2em 0.4em rgba(0,0,0,0.2); border-radius: 6px; height: 400px;  }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h1>Book Club</h1>
+                <p>Meeting each month, every second Saturday, 10am</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="books" class="container">
+    <div class="clearfix">
+        <h2>August 12th, 2017</h2>
+        <a href="https://www.google.com/search?q=Turning Parliament Inside Out: Practical Ideas for Reforming Canada's Democracy, Stewart, Chong, Simms"><img src="/static/images/book-covers/inside-out.jpg"></a>
+        <p>asdf</p>
+    </div>
+    <div class="clearfix">
+        <h2>September 9th, 2017</h2>
+        <a href="https://www.google.com/search?q=Reforming Parliamentary Democracy, Leslie Seidle and David C. Docherty"><img src="/static/images/book-covers/seidle-docherty-reforming.jpg"></a>
+        <p>asdf</p>
+    </div>
+    <div class="clearfix">
+        <h2>October 14th, 2017</h2>
+        <a href="https://www.google.com/search?q=Shopping for Votes: How Politicians Choose Us and We Choose Them, Susan Delacourt"><img src="/static/images/book-covers/delacourt-shopping.jpg"></a>
+        <p>asdf</p>
+    </div>
+</div>
+{% endblock %}
